@@ -20,14 +20,14 @@ alias java11='export JAVA_HOME=$JAVA_11_HOME'
 
 export JAVA=/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/bin/java
 
-# default to Java 8 
+# Default to Java 8 
 java8
 
-#Jetty
+# Jetty
 export JETTY_HOME=/usr/local/Cellar/jetty/9.4.15.v20190215/libexec/
 export JETTY_SH=/usr/local/Cellar/jetty/9.4.15.v20190215/libexec/bin/jetty.sh
 
-#Logstash
+# Logstash
 export LOGSTASH_DESTINATION=alt-aot-g-fou01.fe.cosng.net:4560
 
 # z support
