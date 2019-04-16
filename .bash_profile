@@ -26,20 +26,8 @@ shopt -s cdspell;
 # Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
 [ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2- | tr ' ' '\n')" scp sftp ssh;
 
-export JAVA_8_HOME=$(/usr/libexec/java_home -v1.8)
-export JAVA_11_HOME=$(/usr/libexec/java_home -v11)
-
-export JAVA=${JAVA_8_HOME}/jre/bin/java
-
 # Default to Java 8 
 java8
-
-# Jetty
-export JETTY_HOME=/usr/local/Cellar/jetty/9.4.15.v20190215/libexec/
-export JETTY_SH=/usr/local/Cellar/jetty/9.4.15.v20190215/libexec/bin/jetty.sh
-
-# Logstash
-export LOGSTASH_DESTINATION=alt-aot-g-fou01.fe.cosng.net:4560
 
 # z support
 . /usr/local/etc/profile.d/z.sh
