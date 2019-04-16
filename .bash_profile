@@ -30,7 +30,7 @@ export JAVA_11_HOME=$(/usr/libexec/java_home -v11)
 alias java8='export JAVA_HOME=$JAVA_8_HOME'
 alias java11='export JAVA_HOME=$JAVA_11_HOME'
 
-export JAVA=/Library/Java/JavaVirtualMachines/jdk1.8.0_202.jdk/Contents/Home/jre/bin/java
+export JAVA=${JAVA_8_HOME}/jre/bin/java
 
 # Default to Java 8 
 java8
