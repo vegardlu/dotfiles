@@ -9,3 +9,4 @@ target
 *.versionsBackup
 *.log
 .DS_Store
+*.swp
