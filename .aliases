@@ -8,4 +8,5 @@ alias mvnd="mvn clean install -DskipTests && ./deploy.sh"
 
 # Java
 alias java8='export JAVA_HOME=$JAVA_8_HOME'
+alias java8oracle='export JAVA_HOME=$JAVA_8_HOME_ORACLE'
 alias java11='export JAVA_HOME=$JAVA_11_HOME'
