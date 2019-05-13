@@ -2,6 +2,7 @@
 
 init () {
     mkdir -pv ${HOME}/workspace
+    sh jetty.exclude.sh
 }
 
 link () {
