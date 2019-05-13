@@ -8,8 +8,8 @@ export JAVA_11_HOME=$(/usr/libexec/java_home -v11)
 export JAVA=${JAVA_8_HOME}/jre/bin/java
 
 # Jetty
-export JETTY_HOME=/usr/local/Cellar/jetty/9.4.15.v20190215/libexec/
-export JETTY_SH=/usr/local/Cellar/jetty/9.4.15.v20190215/libexec/bin/jetty.sh
+export JETTY_HOME="$(brew --cellar jetty)/$( brew list --versions jetty | tr ' ' '\n' | tail -1)/libexec"
+export JETTY_SH=$JETTY_HOME"/bin/jetty.sh"
 
 # Logstash
 export LOGSTASH_DESTINATION=alt-aot-g-fou01.fe.cosng.net:4560

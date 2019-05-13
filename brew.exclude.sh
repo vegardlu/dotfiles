@@ -18,5 +18,24 @@ brew update
 # Upgrade any already-installed formulae
 brew upgrade
 
-# Core Utils
+# Coreutil
 brew install coreutils
+
+# Cask
+brew install cask
+
+# Other
+brew install bash-completion
+brew install git
+brew install bash-git-prompt
+brew install docker docker-compose docker-machine
+brew install z
+
+#Java
+brew tap AdoptOpenJDK/openjdk
+brew cask install adoptopenjdk/openjdk/adoptopenjdk8
+brew cask install adoptopenjdk/openjdk/adoptopenjdk11
+
+brew install jetty
+brew install maven
+brew install maven-completion
