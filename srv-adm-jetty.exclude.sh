@@ -1,5 +1,6 @@
 #!/bin/sh
-
+export JETTY_HOME="$(brew --cellar jetty)/$( brew list --versions jetty | tr ' ' '\n' | tail -1)/libexec"
+export JETTY_SH=$JETTY_HOME"/bin/jetty.sh"
 export app=LOCAL
 export logstashDestination=LOGSTASH_DESTINATION 
 export JETTY_BASE=`pwd`
