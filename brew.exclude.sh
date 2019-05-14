@@ -28,14 +28,19 @@ brew install cask
 brew install bash-completion
 brew install git
 brew install bash-git-prompt
-brew install docker docker-compose docker-machine
+brew cask install docker
+brew install docker-compose docker-machine
 brew install z
+brew cask install slack
 
-#Java
+# Java
 brew tap AdoptOpenJDK/openjdk
 brew cask install adoptopenjdk/openjdk/adoptopenjdk8
 brew cask install adoptopenjdk/openjdk/adoptopenjdk11
 
+# Jetty
 brew install jetty
+
+# Maven
 brew install maven
 brew install maven-completion
