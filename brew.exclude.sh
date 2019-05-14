@@ -32,6 +32,7 @@ brew cask install docker
 brew install docker-compose docker-machine
 brew install z
 brew cask install slack
+brew cask install google-chrome
 
 # Java
 brew tap AdoptOpenJDK/openjdk
