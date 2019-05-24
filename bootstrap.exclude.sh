@@ -36,6 +36,11 @@ install_tools () {
 	fi
 }
 
+compile_exports () {
+    sh compiled-exports.exclude.sh
+}
+
 init
 link
 install_tools
+compile_exports
