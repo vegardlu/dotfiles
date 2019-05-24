@@ -10,10 +10,10 @@ if [ -f "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh" ]; then
 fi
 
 # Source
-source .compiled-exports 
-source .exports
-source .functions
-source .aliases
+source ~/.compiled-exports 
+source ~/.exports
+source ~/.functions
+source ~/.aliases
 
 # Case-insensitive globbing (used in pathname expansion)
 shopt -s nocaseglob;
