@@ -45,3 +45,9 @@ brew install jetty
 # Maven
 brew install maven
 brew install maven-completion
+
+# iTerm2
+brew cask install iterm2
+
+# zsh
+brew install zsh
