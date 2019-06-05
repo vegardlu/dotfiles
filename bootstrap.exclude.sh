@@ -40,7 +40,13 @@ compile_exports () {
     sh compiled-exports.exclude.sh
 }
 
+set_zsh () {
+    chsh -s /usr/local/bin/zsh
+}
+
 init
 link
 install_tools
 compile_exports
+set_zsh
+
