@@ -41,7 +41,14 @@ compile_exports () {
 }
 
 set_zsh () {
-    chsh -s /usr/local/bin/zsh
+    echo "Set zsh? (y/n)"
+    read resp
+    if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
+        echo "setting shell to zsh"
+        chsh -s /usr/local/bin/zsh
+    else
+        echo "skipping chsh"
+    fi
 }
 
 init
