@@ -26,19 +26,19 @@ link () {
 }
 
 install_tools () {
-	if [ $( echo "$OSTYPE" | grep 'darwin' ) ] ; then
-		echo "${BLUE}Initializing homebrew${NC}"
-		echo "Proceed? (y/n)"
-		read resp
-		if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
-			echo "Installing useful stuff using brew. This may take a while..."
-			sh brew.exclude.sh
-		else
-			echo "Brew installation cancelled by user"
-		fi
-	else
-		echo "Skipping installations using Homebrew because MacOS was not detected..."
-	fi
+    if [ $( echo "$OSTYPE" | grep 'darwin' ) ] ; then
+        echo "${BLUE}Initializing homebrew${NC}"
+        echo "Proceed? (y/n)"
+        read resp
+        if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
+            echo "Installing useful stuff using brew. This may take a while..."
+            sh brew.exclude.sh
+        else
+            echo "Brew installation cancelled by user"
+        fi
+    else
+        echo "Skipping installations using Homebrew because MacOS was not detected..."
+    fi
 }
 
 compile_exports () {
