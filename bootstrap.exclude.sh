@@ -1,28 +1,33 @@
 #!/bin/sh
 
+BLUE='\033[0;36m'
+NC='\033[0m'
+
 init () {
+    echo "${BLUE}Initializing workspace${NC}"
     mkdir -pv ${HOME}/workspace
+    echo "${BLUE}Initilizing jetty dir${NC}"
     sh jetty.exclude.sh
 }
 
 link () {
-	echo "This utility will symlink the files in this repo to the home directory"
-	echo "Proceed? (y/n)"
-	read resp
-	if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
-		for file in $( ls -A | grep -vE '\.exclude*|\.git$|\.gitignore|.*.md' ) ; do
-			ln -sv "$PWD/$file" "$HOME"
-		done
-		echo "Symlinking complete"
-	else
-		echo "Symlinking cancelled"
-		return 1
-	fi
+    echo "${BLUE}Initializing symlinks${NC}"
+    echo "Proceed? (y/n)"
+    read resp
+    if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
+        for file in $( ls -A | grep -vE '\.exclude*|\.git$|\.gitignore|.*.md' ) ; do
+            ln -sv "$PWD/$file" "$HOME"
+        done
+        echo "Symlinking complete"
+    else
+        echo "Symlinking cancelled"
+        return 1
+    fi
 }
 
 install_tools () {
 	if [ $( echo "$OSTYPE" | grep 'darwin' ) ] ; then
-		echo "This utility will install useful utilities using Homebrew"
+		echo "${BLUE}Initializing homebrew${NC}"
 		echo "Proceed? (y/n)"
 		read resp
 		if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
@@ -37,11 +42,12 @@ install_tools () {
 }
 
 compile_exports () {
+    echo "${BLUE}Setting compiled exports${NC}"
     sh compiled-exports.exclude.sh
 }
 
 set_zsh () {
-    echo "Set zsh? (y/n)"
+    echo "${BLUE}Set ZSH to default?${NC} (y/n)"
     read resp
     if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
         echo "setting shell to zsh"
