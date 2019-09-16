@@ -1,4 +1,7 @@
 hey you!
 
-### install oh my zsh
-sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+#### How do I use this?
+
+Run the following command and follow the guide:
+
+`sh bootstrap.exclude.sh`
