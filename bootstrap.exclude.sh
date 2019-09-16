@@ -16,7 +16,7 @@ link () {
     read resp
     if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
         for file in $( ls -A | grep -vE '\.exclude*|\.git$|\.gitignore|.*.md' ) ; do
-            ln -sv "$PWD/$file" "$HOME"
+            ln -svf "$PWD/$file" "$HOME"
         done
         echo "Symlinking complete"
     else
