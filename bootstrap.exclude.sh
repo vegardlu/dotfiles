@@ -76,3 +76,5 @@ install_tools
 compile_exports
 set_zsh
 oh_my_zsh
+link
+
