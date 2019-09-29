@@ -1,0 +1,14 @@
+
+# ICP Evry
+
+icp-restricted-login () {
+  cloudctl login -u "$(contacts -Hml -f '%e')" -a https://icp-restricted.finods.com:8443
+}
+
+icp-global-login () {
+    cloudctl login -u "$(contacts -Hml -f '%e')" -a https://icp-global.finods.com:8443
+}
+
+icp-prod-login () {
+    cloudctl login -u "$(contacts -Hml -f '%e')" -a https://icp-prod.finods.com:8443
+}
