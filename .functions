@@ -3,12 +3,23 @@
 
 icp-restricted-login () {
   cloudctl login -u "$(contacts -Hml -f '%e')" -a https://icp-restricted.finods.com:8443
+  helm-init
 }
 
 icp-global-login () {
     cloudctl login -u "$(contacts -Hml -f '%e')" -a https://icp-global.finods.com:8443
+    helm-init
 }
 
 icp-prod-login () {
     cloudctl login -u "$(contacts -Hml -f '%e')" -a https://icp-prod.finods.com:8443
+}
+
+helm-init() {
+  eval $(cloudctl helm-init)
+  helm version --tls
+}
+
+helm-upgrade-lad-bonus-r-s2() {
+  helm upgrade eos-lad-bonus-srv-s2 evryfs/fsjetty --namespace eos-lad-bonus-srv-s2 -f /Users/et31464/workspace/lad-bonus-srv/k8s/lad-bonus-r-s2.yaml --wait --reset-values --install --tls --debug --set-string image.tag=1.0.30 --set-file 'configmap.application-envconfig\.yml'='/Users/et31464/workspace/lad-bonus-srv/lad-bonus-srv-config/src/main/resources/application-r-s2.yml'
 }
