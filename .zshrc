@@ -72,6 +72,8 @@ COMPLETION_WAITING_DOTS="true"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
     git
+    docker
+    docker-compose
     kubectl
     kube-ps1
     zsh-syntax-highlighting
