@@ -16,7 +16,7 @@ link () {
     read resp
     if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
         for file in $( ls -A | grep -vE '\.exclude*|\.git$|\.gitignore|.*.md' ) ; do
-            ln -sv "$PWD/$file" "$HOME"
+            ln -svf "$PWD/$file" "$HOME"
         done
         echo "Symlinking complete"
     else
@@ -57,9 +57,24 @@ set_zsh () {
     fi
 }
 
+oh_my_zsh() {
+    echo "${BLUE}Install oh my zsh?${NC} (y/n)"
+    read resp
+    if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
+        echo "installing oh my zsh"
+        sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+    else
+        echo "skipping oh my zsh"
+    fi
+}
+
+
 init
 link
 install_tools
 compile_exports
 set_zsh
+oh_my_zsh
+link
 

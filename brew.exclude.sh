@@ -28,9 +28,12 @@ brew install cask
 brew install bash-completion
 brew install git
 brew install bash-git-prompt
-brew cask install docker
 brew install docker-compose docker-machine
 brew install z
+brew install contacts
+
+# Cask
+brew cask install docker
 brew cask install slack
 brew cask install google-chrome
 
@@ -38,6 +41,7 @@ brew cask install google-chrome
 brew tap AdoptOpenJDK/openjdk
 brew cask install adoptopenjdk/openjdk/adoptopenjdk8
 brew cask install adoptopenjdk/openjdk/adoptopenjdk11
+brew cask install adoptopenjdk/openjdk/adoptopenjdk12
 
 # Jetty
 brew install jetty
