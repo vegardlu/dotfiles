@@ -100,3 +100,7 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
+
+# Jenv - to initialize switching between jvm's
+export PATH="$HOME/.jenv/bin:$PATH"
+eval "$(jenv init -)"
