@@ -6,7 +6,7 @@ NC='\033[0m'
 init () {
     echo "${BLUE}Initializing workspace${NC}"
     mkdir -pv ${HOME}/workspace
-    echo "${BLUE}Initilizing jetty dir${NC}"
+    echo "${BLUE}Initializing jetty dir${NC}"
     sh jetty.exclude.sh
 }
 
@@ -69,6 +69,16 @@ oh_my_zsh() {
     fi
 }
 
+jenv() {
+    echo "${BLUE}Install jenv?${NC} (y/n)"
+    read resp
+    if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
+        echo "installing jenv"
+        sh jenv.exclude.sh
+    else
+        echo "skipping jenv"
+    fi
+}
 
 init
 link
@@ -76,5 +86,6 @@ install_tools
 compile_exports
 set_zsh
 oh_my_zsh
+jenv
 link
 
