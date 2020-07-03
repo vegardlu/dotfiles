@@ -23,3 +23,7 @@ helm-init() {
 helm-upgrade-lad-bonus-r-s2() {
   helm upgrade eos-lad-bonus-srv-s2 evryfs/fsjetty --namespace eos-lad-bonus-srv-s2 -f /Users/et31464/workspace/lad-bonus-srv/k8s/lad-bonus-r-s2.yaml --wait --reset-values --install --timeout 900 --tls --debug --set-string image.tag=$1 --set-file 'configmap.application-envconfig\.yml'='/Users/et31464/workspace/lad-bonus-srv/lad-bonus-srv-config/src/main/resources/application-r-s2.yml'
 }
+
+helm-upgrade-cbt-account-r-s2() {
+  helm upgrade eos-cbt-account-srv-s2 evryfs/fsjetty --namespace eos-cbt-account-srv-s2 -f /Users/et31464/workspace/cbt-account/k8s/cbt-account-r-s2.yaml --wait --reset-values --install --force --timeout 900 --tls --debug --set-string image.tag=$1 --set-file 'configmap.application-envconfig\.yml'='/Users/et31464/workspace/cbt-account/cbt-account-config/src/main/resources/application-r-s2.yml'
+}
