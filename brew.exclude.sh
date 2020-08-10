@@ -31,6 +31,7 @@ brew install bash-git-prompt
 brew install docker-compose docker-machine
 brew install z
 brew install contacts
+brew install speedtest-cli
 
 # Cask
 brew cask install docker
