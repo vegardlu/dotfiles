@@ -32,6 +32,7 @@ brew install docker-compose docker-machine
 brew install z
 brew install contacts
 brew install speedtest-cli
+brew install gh
 
 # Cask
 brew cask install docker
