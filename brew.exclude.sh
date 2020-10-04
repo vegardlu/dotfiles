@@ -44,6 +44,7 @@ brew tap AdoptOpenJDK/openjdk
 brew cask install adoptopenjdk/openjdk/adoptopenjdk8
 brew cask install adoptopenjdk/openjdk/adoptopenjdk11
 brew cask install adoptopenjdk/openjdk/adoptopenjdk12
+brew cask install adoptopenjdk/openjdk/adoptopenjdk14
 
 # Jetty
 brew install jetty
