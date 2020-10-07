@@ -18,3 +18,9 @@ alias java14='export JAVA_HOME=$JAVA_14_HOME'
 alias docker-compose-dev='docker-compose -f ~/workspace/docker-compose-dev/docker-compose.yml'
 alias dcd='docker-compose-dev'
 
+# Emoji-aliases
+alias 🍊='git push'
+alias 👻='git pull'
+alias 🦉='git add .'
+alias 💁='git commit -m '
+
