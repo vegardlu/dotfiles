@@ -22,5 +22,5 @@ alias dcd='docker-compose-dev'
 alias 🍊='git push'
 alias 👻='git pull'
 alias 🦉='git add .'
-alias 💁='git commit -m '
+alias 🍰='git commit -m '
 
