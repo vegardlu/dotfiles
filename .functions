@@ -28,6 +28,7 @@ helm-upgrade-cbt-account-r-s2() {
   helm upgrade eos-cbt-account-srv-s2 evryfs/fsjetty --namespace eos-cbt-account-srv-s2 -f /Users/et31464/workspace/cbt-account/k8s/cbt-account-r-s2.yaml --wait --reset-values --install --force --timeout 900 --tls --debug --set-string image.tag=$1 --set-file 'configmap.application-envconfig\.yml'='/Users/et31464/workspace/cbt-account/cbt-account-config/src/main/resources/application-r-s2.yml'
 }
 
-helm-delete-purge-cbt-account-r-s2() {
+💣-cbt-account-r-s2() {
+  echo "👻"
   helm delete eos-cbt-account-srv-s2 --purge --tls
 }
