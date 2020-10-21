@@ -38,6 +38,7 @@ brew install gh
 brew cask install docker
 brew cask install slack
 brew cask install google-chrome
+brew cask install discord
 
 # Java
 brew tap AdoptOpenJDK/openjdk
