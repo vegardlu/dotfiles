@@ -7,12 +7,12 @@ icp-restricted-login () {
 }
 
 icp-global-login () {
-    cloudctl login -u "$(contacts -Hml -f '%e')" -a https://icp-global.finods.com:8443
-    helm-init
+  cloudctl login -u "$(contacts -Hml -f '%e')" -a https://icp-global.finods.com:8443
+  helm-init
 }
 
 icp-prod-login () {
-    cloudctl login -u "$(contacts -Hml -f '%e')" -a https://icp-prod.finods.com:8443
+  cloudctl login -u "$(contacts -Hml -f '%e')" -a https://icp-prod.finods.com:8443
 }
 
 helm-init() {
