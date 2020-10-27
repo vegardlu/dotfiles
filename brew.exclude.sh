@@ -33,6 +33,7 @@ brew install z
 brew install contacts
 brew install speedtest-cli
 brew install gh
+brew install helm
 
 # Cask
 brew cask install docker
