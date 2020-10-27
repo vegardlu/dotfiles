@@ -1,34 +1,131 @@
-
 # ICP Evry
 
-icp-restricted-login () {
+icp-restricted-login() {
   cloudctl login -u "$(contacts -Hml -f '%e')" -a https://icp-restricted.finods.com:8443
-  helm-init
+  helm version
 }
 
-icp-global-login () {
+icp-global-login() {
   cloudctl login -u "$(contacts -Hml -f '%e')" -a https://icp-global.finods.com:8443
-  helm-init
+  helm version
 }
 
-icp-prod-login () {
+icp-prod-login() {
   cloudctl login -u "$(contacts -Hml -f '%e')" -a https://icp-prod.finods.com:8443
 }
 
-helm-init() {
-  eval $(cloudctl helm-init)
-  helm version --tls
+helm-upgrade-release() {
+  echo "----------------"
+  echo "Upgrading $1"
+  echo "----------------"
+  echo "- Namespace:  $1"
+  echo "- Settings:   $2"
+  echo "- Env-config: $3"
+  echo "- Version:    $4"
+  echo "----------------"
+  helm upgrade "$1" evryfs/fsjetty --namespace "$1" -f "$2" --wait --reset-values --install --timeout 5m0s \
+    --debug --set-string image.tag="$4" --set-file 'configmap.application-envconfig\.yml'="$3"
+}
+
+helm-delete-release() {
+  echo "----------------"
+  echo "Are you sure you wish to delete $1?"
+  select yn in "Yes" "No"; do
+    case $yn in
+    Yes)
+      echo "----------------"
+      echo "Deleting $1"
+      echo "----------------"
+      helm delete "$1" --purge
+      break
+      ;;
+    No)
+      break
+      ;;
+    esac
+  done
+}
+
+helm-repo-add-evryfs() {
+  helm repo add evryfs https://fsdepot.evry.com/nexus/repository/evryfs-helm/
+}
+
+helm-upgrade-lad-bonus-g-d1() {
+  helm-upgrade-release \
+    "eos-lad-bonus-srv-d1" \
+    "$WORKSPACE/lad-bonus-srv/k8s/lad-bonus-g-d1.yaml" \
+    "$WORKSPACE/lad-bonus-srv/lad-bonus-config/src/main/resources/application-g-d1.yml" "$1"
 }
 
 helm-upgrade-lad-bonus-r-s2() {
-  helm upgrade eos-lad-bonus-srv-s2 evryfs/fsjetty --namespace eos-lad-bonus-srv-s2 -f /Users/et31464/workspace/lad-bonus-srv/k8s/lad-bonus-r-s2.yaml --wait --reset-values --install --timeout 900 --tls --debug --set-string image.tag=$1 --set-file 'configmap.application-envconfig\.yml'='/Users/et31464/workspace/lad-bonus-srv/lad-bonus-config/src/main/resources/application-r-s2.yml'
+  helm-upgrade-release \
+    "eos-lad-bonus-srv-s2" \
+    "$WORKSPACE/lad-bonus-srv/k8s/lad-bonus-r-s2.yaml" \
+    "$WORKSPACE/lad-bonus-srv/lad-bonus-config/src/main/resources/application-r-s2.yml" "$1"
+}
+
+helm-delete-lad-bonus-g-d1() {
+  helm-delete-release "eos-lad-bonus-srv-d1"
+}
+
+helm-delete-lad-bonus-r-s2() {
+  helm-delete-release "eos-lad-bonus-srv-s2"
+}
+
+helm-upgrade-cbt-account-g-d1() {
+  helm-upgrade-release \
+    "eos-cbt-account-srv-d1" \
+    "$WORKSPACE/cbt-account/k8s/cbt-account-g-d1.yaml" \
+    "$WORKSPACE/cbt-account/cbt-account-config/src/main/resources/application-g-d1.yml" "$1"
 }
 
 helm-upgrade-cbt-account-r-s2() {
-  helm upgrade eos-cbt-account-srv-s2 evryfs/fsjetty --namespace eos-cbt-account-srv-s2 -f /Users/et31464/workspace/cbt-account/k8s/cbt-account-r-s2.yaml --wait --reset-values --install --force --timeout 900 --tls --debug --set-string image.tag=$1 --set-file 'configmap.application-envconfig\.yml'='/Users/et31464/workspace/cbt-account/cbt-account-config/src/main/resources/application-r-s2.yml'
+  helm-upgrade-release \
+    "eos-cbt-account-srv-s2" \
+    "$WORKSPACE/cbt-account/k8s/cbt-account-r-s2.yaml" \
+    "$WORKSPACE/cbt-account/cbt-account-config/src/main/resources/application-r-s2.yml" "$1"
 }
 
-💣-cbt-account-r-s2() {
-  echo "👻"
-  helm delete eos-cbt-account-srv-s2 --purge --tls
+# Helm 2
+
+helm2-init() {
+  eval $(cloudctl helm-init)
+  helm2 version --tls
+}
+
+helm2-icp-restricted-login() {
+  cloudctl login -u "$(contacts -Hml -f '%e')" -a https://icp-restricted.finods.com:8443
+  helm2-init
+}
+
+helm2-icp-global-login() {
+  cloudctl login -u "$(contacts -Hml -f '%e')" -a https://icp-global.finods.com:8443
+  helm2-init
+}
+
+helm2-delete-release() {
+  echo "----------------"
+  echo "Are you sure you wish to delete $1?"
+  select yn in "Yes" "No"; do
+    case $yn in
+    Yes)
+      echo "----------------"
+      echo "Deleting $1"
+      echo "----------------"
+      helm2 delete "$1" --purge --tls
+      break
+      ;;
+    No)
+      break
+      ;;
+    esac
+  done
+}
+
+helm2-delete-cbt-account-g-d1() {
+  helm-delete-release "eos-cbt-account-srv-d1"
+}
+
+helm2-delete-cbt-account-r-s2() {
+  helm-delete-release "eos-cbt-account-srv-s2"
 }
