@@ -64,12 +64,27 @@ helm-upgrade-lad-bonus-r-s2() {
     "$WORKSPACE/lad-bonus-srv/lad-bonus-config/src/main/resources/application-r-s2.yml" "$1"
 }
 
+helm-upgrade-lad-dis-g-d1() {
+  helm-upgrade-release \
+    "eos-lad-dis-srv-d1" \
+    "$WORKSPACE/lad-dis-server/k8s/lad-dis-srv-g-d1.yaml" \
+    "$WORKSPACE/lad-dis-server/lad-dis-srv-config/src/main/resources/application-g-d1.yml" "$1"
+}
+
 helm-delete-lad-bonus-g-d1() {
   helm-delete-release "eos-lad-bonus-srv-d1"
 }
 
 helm-delete-lad-bonus-r-s2() {
   helm-delete-release "eos-lad-bonus-srv-s2"
+}
+
+helm-delete-lad-dis-g-d1() {
+  helm-delete-release "eos-lad-dis-srv-d1"
+}
+
+helm-delete-lad-dis-r-s2() {
+  helm-delete-release "eos-lad-dis-srv-s2"
 }
 
 helm-upgrade-cbt-account-g-d1() {
@@ -84,6 +99,13 @@ helm-upgrade-cbt-account-r-s2() {
     "eos-cbt-account-srv-s2" \
     "$WORKSPACE/cbt-account/k8s/cbt-account-r-s2.yaml" \
     "$WORKSPACE/cbt-account/cbt-account-config/src/main/resources/application-r-s2.yml" "$1"
+}
+
+helm-upgrade-lad-dis-g-d1() {
+  helm-upgrade-release \
+    "eos-lad-dis-srv-s2" \
+    "$WORKSPACE/lad-dis-server/k8s/lad-dis-srv-r-s2.yaml" \
+    "$WORKSPACE/lad-dis-server/lad-dis-srv-config/src/main/resources/application-r-s2.yml" "$1"
 }
 
 # Helm 2
