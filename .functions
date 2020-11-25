@@ -103,7 +103,7 @@ helm-upgrade-cbt-account-r-s2() {
 
 helm-upgrade-lad-dis-g-d1() {
   helm-upgrade-release \
-    "eos-lad-dis-srv-s2" \
+    "eos-lad-dis-srv-d1" \
     "$WORKSPACE/lad-dis-server/k8s/lad-dis-srv-r-s2.yaml" \
     "$WORKSPACE/lad-dis-server/lad-dis-srv-config/src/main/resources/application-r-s2.yml" "$1"
 }
