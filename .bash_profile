@@ -32,3 +32,5 @@ java8
 
 # z support
 . /usr/local/etc/profile.d/z.sh
+
+export PATH="$HOME/.cargo/bin:$PATH"
