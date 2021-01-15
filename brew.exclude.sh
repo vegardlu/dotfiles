@@ -36,17 +36,17 @@ brew install gh
 brew install helm
 
 # Cask
-brew cask install docker
-brew cask install slack
-brew cask install google-chrome
-brew cask install discord
+brew install docker --cask
+brew install slack --cask
+brew install google-chrome --cask
+brew install discord --cask
 
 # Java
 brew tap AdoptOpenJDK/openjdk
-brew cask install adoptopenjdk/openjdk/adoptopenjdk8
-brew cask install adoptopenjdk/openjdk/adoptopenjdk11
-brew cask install adoptopenjdk/openjdk/adoptopenjdk12
-brew cask install adoptopenjdk/openjdk/adoptopenjdk14
+brew install adoptopenjdk/openjdk/adoptopenjdk8 --cask 
+brew install adoptopenjdk/openjdk/adoptopenjdk11 --cask 
+brew install adoptopenjdk/openjdk/adoptopenjdk12 --cask 
+brew install adoptopenjdk/openjdk/adoptopenjdk14 --cask
 
 # Jetty
 brew install jetty
@@ -56,7 +56,7 @@ brew install maven
 brew install maven-completion
 
 # iTerm2
-brew cask install iterm2
+brew install iterm2 --cask
 
 # zsh
 brew install zsh
