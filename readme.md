@@ -8,6 +8,6 @@ things you don’t want or need. Don’t blindly use my settings unless you know
 #### Installation
 
 * I would suggest checking out this repo to `~/workspace/dotfiles` 
-* Then you can run the following command and follow the guide: `sh bootstrap.exclude.sh`
+* Then you can run the following command and follow the guide: `sh bootstrap.sh`
 
 ###

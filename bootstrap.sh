@@ -7,7 +7,7 @@ init () {
     echo "${BLUE}Initializing workspace${NC}"
     mkdir -pv ${HOME}/workspace
     echo "${BLUE}Initilizing jetty dir${NC}"
-    sh jetty.exclude.sh
+    sh jetty.sh
 }
 
 link () {
@@ -15,9 +15,14 @@ link () {
     echo "Proceed? (y/n)"
     read resp
     if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
-        for file in $( ls -A | grep -vE '\.exclude*|\.git$|\.gitignore|.*.md' ) ; do
-            ln -svf "$PWD/$file" "$HOME"
-        done
+        ln -svf "$PWD/.aliases" "$HOME"
+        ln -svf "$PWD/.bash_profile" "$HOME"
+        ln -svf "$PWD/.exports" "$HOME"
+        ln -svf "$PWD/.functions" "$HOME"
+        ln -svf "$PWD/.vimrc" "$HOME"
+        ln -svf "$PWD/.zshenv" "$HOME"
+        ln -svf "$PWD/.zshrc" "$HOME"
+        ln -svf "$PWD/.aliases" "$HOME"
         echo "Symlinking complete"
     else
         echo "Symlinking cancelled"
@@ -32,7 +37,7 @@ install_tools () {
         read resp
         if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
             echo "Installing useful stuff using brew. This may take a while..."
-            sh brew.exclude.sh
+            sh brew-install.sh
         else
             echo "Brew installation cancelled by user"
         fi
@@ -43,7 +48,7 @@ install_tools () {
 
 compile_exports () {
     echo "${BLUE}Setting compiled exports${NC}"
-    sh compiled-exports.exclude.sh
+    sh compiled-exports.sh
 }
 
 set_zsh () {
