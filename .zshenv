@@ -6,8 +6,8 @@ source ~/.exports
 source ~/.functions
 source ~/.aliases
 
-# Default to Java 8 
-java8
+# Default to Java 11 
+java11
 
 # z support
 . /usr/local/etc/profile.d/z.sh

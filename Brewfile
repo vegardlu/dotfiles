@@ -23,6 +23,8 @@ brew 'cheat'
 brew 'vim'
 brew 'wget'
 brew 'helm'
+brew 'python'
+brew 'brew-pip'
 
 # Casks
 cask 'docker'
@@ -35,3 +37,6 @@ cask 'steam'
 # Java
 cask 'adoptopenjdk8'
 cask 'adoptopenjdk11'
+cask 'adoptopenjdk15'
+cask 'atom'
+
