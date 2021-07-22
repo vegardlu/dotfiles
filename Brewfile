@@ -1,6 +1,7 @@
 # Tap
 tap 'homebrew/cask'
 tap 'AdoptOpenJDK/openjdk'
+tap 'homebrew/cask-fonts'
 
 # Div
 brew 'coreutils'
@@ -25,6 +26,10 @@ brew 'wget'
 brew 'helm'
 brew 'python'
 brew 'brew-pip'
+brew 'node'
+brew 'npm'
+brew 'openshift-cli'
+brew 'exa'
 
 # Casks
 cask 'docker'
@@ -33,10 +38,14 @@ cask 'google-chrome'
 cask 'discord'
 cask 'iterm2'
 cask 'steam'
+cask 'keystore-explorer'
+cask 'font-jetbrains-mono'
+cask 'font-jetbrains-mono-nerd-font'
 
 # Java
 cask 'adoptopenjdk8'
 cask 'adoptopenjdk11'
 cask 'adoptopenjdk15'
 cask 'atom'
+cask 'visual-studio-code'
 
