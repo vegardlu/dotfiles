@@ -24,3 +24,6 @@ alias 👻='git pull'
 alias 🦉='git add .'
 alias 🍰='git commit -m '
 
+# Exa
+alias e='exa --icons --git -laTL 1'
+
