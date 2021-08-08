@@ -27,3 +27,6 @@ alias 🍰='git commit -m '
 # Exa
 alias e='exa --icons --git -laTL 1'
 
+# Spring
+alias sbrun='mvn -pl "$(find *rest -maxdepth 0)" -Dsbrun spring-boot:run'
+
