@@ -11,3 +11,4 @@ things you don’t want or need. Don’t blindly use my settings unless you know
 * Then you can run the following command and follow the guide: `sh bootstrap.sh`
 
 ###
+
