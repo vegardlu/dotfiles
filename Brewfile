@@ -1,6 +1,5 @@
 # Tap
 tap 'homebrew/cask'
-tap 'AdoptOpenJDK/openjdk'
 tap 'homebrew/cask-fonts'
 
 # Div
@@ -42,11 +41,10 @@ cask 'steam'
 cask 'keystore-explorer'
 cask 'font-jetbrains-mono'
 cask 'font-jetbrains-mono-nerd-font'
-
-# Java
-cask 'adoptopenjdk8'
-cask 'adoptopenjdk11'
-cask 'adoptopenjdk15'
 cask 'atom'
 cask 'visual-studio-code'
 
+# Temurin Java
+cask 'temurin'
+cask 'temurin8'
+cask 'temurin11'
