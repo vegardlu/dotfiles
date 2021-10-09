@@ -30,6 +30,7 @@ brew 'node'
 brew 'npm'
 brew 'openshift-cli'
 brew 'exa'
+brew 'kubeseal'
 
 # Casks
 cask 'docker'

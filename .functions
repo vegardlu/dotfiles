@@ -1,3 +1,11 @@
+jasypt-encode() {
+  mvn jasypt:encrypt-value -Djasypt.encryptor.password="$1" -Djasypt.plugin.value="$2"
+}
+
+jasypt-encode-dev() {
+  jasypt-encode "dev-jasypt-encryptor-password" "$1"
+}
+
 # ICP Evry
 
 icp-restricted-login() {
