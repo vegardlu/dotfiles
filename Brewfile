@@ -28,6 +28,7 @@ brew 'npm'
 brew 'openshift-cli'
 brew 'exa'
 brew 'kubeseal'
+brew 'thefuck'
 
 # Casks
 cask 'docker'

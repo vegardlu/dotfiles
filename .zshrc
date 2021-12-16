@@ -108,4 +108,6 @@ export LANG=en_US.UTF-8
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
+eval $(thefuck --alias)
+
 export PATH=/Users/et31464/Library/Python/3.9/bin:$PATH
