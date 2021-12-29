@@ -15,6 +15,8 @@ link () {
     echo "Proceed? (y/n)"
     read resp
     if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
+        mkdir -pv "${HOME}/.config"
+        mkdir -pv "${HOME}/.config/fish"
         ln -svf "$PWD/.aliases" "$HOME"
         ln -svf "$PWD/.bash_profile" "$HOME"
         ln -svf "$PWD/.exports" "$HOME"
@@ -23,6 +25,10 @@ link () {
         ln -svf "$PWD/.zshenv" "$HOME"
         ln -svf "$PWD/.zshrc" "$HOME"
         ln -svf "$PWD/.aliases" "$HOME"
+        ln -svf "$PWD/.config/fish/config.fish" "$HOME/.config/fish/config.fish"
+        ln -svf "$PWD/.config/fish/alias.fish" "$HOME/.config/fish/alias.fish"
+        ln -svf "$PWD/.config/fish/export.fish" "$HOME/.config/fish/export.fish"
+        ln -svf "$PWD/.config/starship.toml" "$HOME/.config/starship.toml"
         echo "Symlinking complete"
     else
         echo "Symlinking cancelled"
@@ -68,12 +74,12 @@ oh_my_zsh() {
     if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
         echo "installing oh my zsh"
         sh -c "$(curl -fsSL https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
-        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
+        git clone https://github.com/zsh-users/zsh-syntax-highlighting.git \
+          ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
     else
         echo "skipping oh my zsh"
     fi
 }
-
 
 init
 link
@@ -82,4 +88,3 @@ compile_exports
 set_zsh
 oh_my_zsh
 link
-

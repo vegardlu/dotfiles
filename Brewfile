@@ -29,6 +29,8 @@ brew 'openshift-cli'
 brew 'exa'
 brew 'kubeseal'
 brew 'thefuck'
+brew 'fish'
+brew 'starship'
 
 # Casks
 cask 'docker'

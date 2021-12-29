@@ -1,0 +1,13 @@
+format="$directory$all$character"
+
+[java]
+format = 'via [${symbol}(${version} )](cyan)'
+
+[kubernetes]
+format = 'on [⛵ $context \($namespace\)](cyan) '
+disabled = false
+
+[kubernetes.context_aliases]
+".*api-os-global-finods-com:6443.*" = "global"
+".*api-os-restricted-finods-com:6443.*" = "restricted"
+".*api-os-prod-finods-com:6443.*" = "production"
