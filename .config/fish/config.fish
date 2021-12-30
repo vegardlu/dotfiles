@@ -7,6 +7,7 @@ source ~/.config/fish/export.fish
 # Path
 set PATH /opt/homebrew/bin /opt/homebrew/sbin $PATH
 set PATH /usr/local/bin /usr/bin /bin /usr/sbin /sbin /usr/local/bin /usr/bin /bin /usr/sbin /sbin $PATH
+set PATH $HOME/workspace/dotfiles/bin $PATH
 
 # Fish syntax highlighting
 set -g fish_color_autosuggestion '555'  'brblack'

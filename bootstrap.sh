@@ -7,7 +7,7 @@ init () {
     echo "${BLUE}Initializing workspace${NC}"
     mkdir -pv ${HOME}/workspace
     echo "${BLUE}Initilizing jetty dir${NC}"
-    sh jetty.sh
+    sh jetty/jetty-init.sh
 }
 
 link () {
@@ -28,6 +28,7 @@ link () {
         ln -svf "$PWD/.config/fish/config.fish" "$HOME/.config/fish/config.fish"
         ln -svf "$PWD/.config/fish/alias.fish" "$HOME/.config/fish/alias.fish"
         ln -svf "$PWD/.config/fish/export.fish" "$HOME/.config/fish/export.fish"
+        ln -svf "$PWD/.config/fish/completions" "$HOME/.config/fish/completions"
         ln -svf "$PWD/.config/starship.toml" "$HOME/.config/starship.toml"
         echo "Symlinking complete"
     else

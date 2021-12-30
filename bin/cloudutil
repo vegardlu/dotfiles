@@ -1,0 +1,18 @@
+#!/bin/sh
+
+encrypt() {
+  mvn com.github.ulisesbocchio:jasypt-maven-plugin:3.0.4:encrypt-value \
+  -Djasypt.encryptor.password="$2" \
+  -Djasypt.plugin.value="$3" \
+  -Dspring.config.location="" | grep ENC
+}
+
+test2() {
+  echo "test2"
+}
+
+case "$1" in
+	encrypt) encrypt "$2" "$3";;
+	test2) test2;;
+	*) echo "Usage: $(basename "$0") {test|test2}";;
+esac
