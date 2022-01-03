@@ -15,7 +15,7 @@ alias java12='export JAVA_HOME=$JAVA_12_HOME'
 alias java17='export JAVA_HOME=$JAVA_17_HOME'
 
 # Docker
-alias docker-compose-dev='docker-compose -f ~/workspace/docker-compose-dev/docker-compose.yml'
+alias docker-compose-dev='docker compose -f ~/workspace/docker-compose-dev/docker-compose.yml'
 alias dcd='docker-compose-dev'
 
 # Emoji-aliases
