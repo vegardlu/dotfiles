@@ -1,7 +1,6 @@
 # Z SH env 
 
 # Source
-source ~/.compiled-exports 
 source ~/.exports
 source ~/.functions
 source ~/.aliases
