@@ -1,6 +1,7 @@
 # Tap
 tap 'homebrew/cask'
 tap 'homebrew/cask-fonts'
+tap 'homebrew/cask-versions'
 
 # Div
 brew 'coreutils'
@@ -29,6 +30,7 @@ brew 'kubeseal'
 brew 'thefuck'
 brew 'fish'
 brew 'starship'
+brew 'kubernetes-cli'
 
 # Casks
 cask 'docker'
