@@ -1,13 +1,16 @@
 # Exports
-
-export WORKSPACE="/Users/et31464/workspace"
+set -xg WORKSPACE "/Users/et31464/workspace"
 
 # Java
-export JAVA_8_HOME=(/usr/libexec/java_home -v1.8)
-export JAVA_11_HOME=(/usr/libexec/java_home -v11)
-export JAVA_17_HOME=(/usr/libexec/java_home -v17)
+set -xg JAVA_8_HOME (/usr/libexec/java_home -v1.8)
+set -xg JAVA_11_HOME (/usr/libexec/java_home -v11)
+set -xg JAVA_17_HOME (/usr/libexec/java_home -v17)
 
-export JAVA={$JAVA_11_HOME}/jre/bin/java
+set -xg JAVA {$JAVA_11_HOME}/jre/bin/java
 
 # Logstash
-export LOGSTASH_DESTINATION=alt-aot-g-fou01.fe.cosng.net:4560
+set -xg LOGSTASH_DESTINATION alt-aot-g-fou01.fe.cosng.net:4560
+
+# Make Properties
+set -xg envFile '--env-file=/Users/et31464/.env'
+set -xg mvnProperties "-Ddb.url='jdbc:oracle:thin:@dlt-exa853-scan.unix.cosng.net:1530/ace_g_s1' -Ddb.user=acgdata -Ddb.password=acg -Doracle.net.disableOob=true"

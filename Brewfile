@@ -44,6 +44,7 @@ cask 'font-jetbrains-mono'
 cask 'font-jetbrains-mono-nerd-font'
 cask 'atom'
 cask 'visual-studio-code'
+cask 'postman'
 
 # Temurin Java
 cask 'temurin'
