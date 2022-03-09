@@ -27,6 +27,7 @@ link () {
         ln -svf "$PWD/.aliases" "$HOME"
         ln -svf "$PWD/.config/fish/config.fish" "$HOME/.config/fish/config.fish"
         ln -svf "$PWD/.config/fish/alias.fish" "$HOME/.config/fish/alias.fish"
+        ln -svf "$PWD/.config/fish/local.fish" "$HOME/.config/fish/local.fish"
         ln -svf "$PWD/.config/fish/export.fish" "$HOME/.config/fish/export.fish"
         ln -svf "$PWD/.config/fish/completions" "$HOME/.config/fish/completions"
         ln -svf "$PWD/.config/starship.toml" "$HOME/.config/starship.toml"
@@ -69,6 +70,17 @@ set_zsh () {
     fi
 }
 
+env_file () {
+      echo "${BLUE}Create env file?${NC} (y/n)"
+      read resp
+      if [ "$resp" = 'y' -o "$resp" = 'Y' ] ; then
+            echo "creating env file"
+            echo "SPRING_ARGS='--datasource.url=$oracleDbUrl --datasource.user=$oracleDbUser --datasource.password=$oracleDbPassword" > "$HOME/.env"
+      else
+          echo "skipping env file creation"
+      fi
+}
+
 oh_my_zsh() {
     echo "${BLUE}Install oh my zsh?${NC} (y/n)"
     read resp
@@ -85,7 +97,5 @@ oh_my_zsh() {
 init
 link
 install_tools
-compile_exports
-set_zsh
-oh_my_zsh
+env_file
 link

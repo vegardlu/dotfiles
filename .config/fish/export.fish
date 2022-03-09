@@ -13,4 +13,4 @@ set -xg LOGSTASH_DESTINATION alt-aot-g-fou01.fe.cosng.net:4560
 
 # Make Properties
 set -xg envFile '--env-file=/Users/et31464/.env'
-set -xg mvnProperties "-Ddb.url='jdbc:oracle:thin:@dlt-exa853-scan.unix.cosng.net:1530/ace_g_s1' -Ddb.user=acgdata -Ddb.password=acg -Doracle.net.disableOob=true"
+set -xg mvnProperties "-Ddb.url='$oracleDbUrl' -Ddb.user=$oracleDbUser -Ddb.password=$oracleDbPassword -Doracle.net.disableOob=true"

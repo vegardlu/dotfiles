@@ -1,6 +1,9 @@
 # Fish alias
 source ~/.config/fish/alias.fish
 
+# Fish local
+source ~/.config/fish/local.fish
+
 # Fish export
 source ~/.config/fish/export.fish
 
