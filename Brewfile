@@ -31,6 +31,7 @@ brew 'thefuck'
 brew 'fish'
 brew 'starship'
 brew 'kubernetes-cli'
+brew 'mkdocs'
 
 # Casks
 cask 'docker'
@@ -50,3 +51,5 @@ cask 'postman'
 cask 'temurin'
 cask 'temurin8'
 cask 'temurin11'
+cask 'temurin17'
+
