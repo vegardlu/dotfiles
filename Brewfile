@@ -31,6 +31,8 @@ brew 'thefuck'
 brew 'fish'
 brew 'starship'
 brew 'kubernetes-cli'
+brew 'mkdocs'
+brew 'mvndaemon/homebrew-mvnd/mvnd'
 
 # Casks
 cask 'docker'
@@ -48,5 +50,6 @@ cask 'postman'
 
 # Temurin Java
 cask 'temurin'
+cask 'temurin17'
 cask 'temurin8'
 cask 'temurin11'
