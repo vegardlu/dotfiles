@@ -5,7 +5,6 @@ alias e='exa --icons --git -laTL 1'
 alias mvnit="mvn clean install -Dintegration-test=true"
 alias mvnp="mvn clean install -Dpackaging=true"
 alias mvnitp="mvn clean install -Dpackaging=true -Dintegration-test=true"
-alias mvnd="mvn clean install -DskipTests && ./deploy.sh"
 alias mvnf='mvn install -DskipTests -pl \!(find *schemas -maxdepth 0)'
 
 # Java
