@@ -38,5 +38,5 @@ set -g fish_color_valid_path --underline
 # My Starship
 starship init fish | source
 
-# Java 11
-java11
+# Java 17
+java17

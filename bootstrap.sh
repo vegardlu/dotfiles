@@ -6,8 +6,6 @@ NC='\033[0m'
 init () {
     echo "${BLUE}Initializing workspace${NC}"
     mkdir -pv ${HOME}/workspace
-    echo "${BLUE}Initilizing jetty dir${NC}"
-    sh jetty/jetty-init.sh
 }
 
 link () {
