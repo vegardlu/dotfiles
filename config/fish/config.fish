@@ -40,3 +40,6 @@ starship init fish | source
 
 # Java 11
 java11
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/h168060/google-cloud-sdk/path.fish.inc' ]; . '/Users/h168060/google-cloud-sdk/path.fish.inc'; end

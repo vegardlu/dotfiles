@@ -6,8 +6,6 @@ NC='\033[0m'
 init () {
     echo "${BLUE}Initializing workspace${NC}"
     mkdir -pv ${HOME}/workspace
-    echo "${BLUE}Initilizing jetty dir${NC}"
-    sh jetty/jetty-init.sh
 }
 
 link () {
@@ -18,19 +16,19 @@ link () {
         mkdir -pv "${HOME}/.config"
         mkdir -pv "${HOME}/.config/fish"
         ln -svf "$PWD/.aliases" "$HOME"
-        ln -svf "$PWD/.bash_profile" "$HOME"
         ln -svf "$PWD/.exports" "$HOME"
         ln -svf "$PWD/.functions" "$HOME"
         ln -svf "$PWD/.vimrc" "$HOME"
-        ln -svf "$PWD/.zshenv" "$HOME"
-        ln -svf "$PWD/.zshrc" "$HOME"
         ln -svf "$PWD/.aliases" "$HOME"
-        ln -svf "$PWD/.config/fish/config.fish" "$HOME/.config/fish/config.fish"
-        ln -svf "$PWD/.config/fish/alias.fish" "$HOME/.config/fish/alias.fish"
-        ln -svf "$PWD/.config/fish/local.fish" "$HOME/.config/fish/local.fish"
-        ln -svf "$PWD/.config/fish/export.fish" "$HOME/.config/fish/export.fish"
-        ln -svf "$PWD/.config/fish/completions" "$HOME/.config/fish/completions"
-        ln -svf "$PWD/.config/starship.toml" "$HOME/.config/starship.toml"
+        ln -svf "$PWD/config/.bash_profile" "$HOME/.bash_profile"
+        ln -svf "$PWD/config/.zshenv" "$HOME/.zshenv"
+        ln -svf "$PWD/config/.zshrc" "$HOME/.zshrc"
+        ln -svf "$PWD/config/fish/config.fish" "$HOME/.config/fish/config.fish"
+        ln -svf "$PWD/config/fish/alias.fish" "$HOME/.config/fish/alias.fish"
+        ln -svf "$PWD/config/fish/local.fish" "$HOME/.config/fish/local.fish"
+        ln -svf "$PWD/config/fish/export.fish" "$HOME/.config/fish/export.fish"
+        ln -svf "$PWD/config/fish/completions" "$HOME/.config/fish/completions"
+        ln -svf "$PWD/config/starship.toml" "$HOME/.config/starship.toml"
         echo "Symlinking complete"
     else
         echo "Symlinking cancelled"
