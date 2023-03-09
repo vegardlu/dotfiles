@@ -38,8 +38,8 @@ set -g fish_color_valid_path --underline
 # My Starship
 starship init fish | source
 
-# Java 11
-java11
+# Java 17
+java17
 
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f '/Users/h168060/google-cloud-sdk/path.fish.inc' ]; . '/Users/h168060/google-cloud-sdk/path.fish.inc'; end
