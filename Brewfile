@@ -31,6 +31,7 @@ brew 'thefuck'
 brew 'fish'
 brew 'starship'
 brew 'kubernetes-cli'
+brew 'postgrest'
 
 # Casks
 cask 'docker'

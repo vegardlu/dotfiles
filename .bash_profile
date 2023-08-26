@@ -9,6 +9,8 @@ if [ -f "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh" ]; then
    source "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh"
 fi
 
+shopt -s expand_aliases
+
 # Source
 source ~/.compiled-exports
 source ~/.exports
