@@ -1,5 +1,6 @@
 # Aliases
 alias e='exa --icons --git -laTL 1'
+alias googlecloud='gcloud auth login'
 
 # Maven
 alias mvnit="mvn clean install -Dintegration-test=true"
@@ -13,6 +14,7 @@ alias java8oracle='export JAVA_HOME=$JAVA_8_HOME_ORACLE'
 alias java11='export JAVA_HOME=$JAVA_11_HOME'
 alias java12='export JAVA_HOME=$JAVA_12_HOME'
 alias java17='export JAVA_HOME=$JAVA_17_HOME'
+alias java21='export JAVA_HOME=$JAVA_21_HOME'
 
 # Docker
 alias docker-compose-dev='docker compose -f ~/workspace/docker-compose-dev/docker-compose.yml'
