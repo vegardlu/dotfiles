@@ -1,4 +1,5 @@
 set -x DATABASE_HOST localhost
+set -x DATABASE_JDBC_URL jdbc:postgresql://localhost:5432/vegard
 set -x DATABASE_USERNAME vegard
 set -x DATABASE_DATABASE vegard
 set -x DATABASE_PORT 5432

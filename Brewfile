@@ -32,6 +32,9 @@ brew 'starship'
 brew 'kubernetes-cli'
 brew 'mkdocs'
 brew 'mvndaemon/homebrew-mvnd/mvnd'
+brew 'kubectx'
+brew 'gradle'
+brew 'gemini-cli'
 
 # Casks
 cask 'docker'
@@ -43,6 +46,7 @@ cask 'visual-studio-code'
 
 # Temurin Java
 cask 'temurin'
+cask 'temurin21'
 cask 'temurin17'
 cask 'temurin8'
 cask 'temurin11'
