@@ -37,7 +37,6 @@ brew 'gradle'
 brew 'gemini-cli'
 
 # Casks
-cask 'docker'
 cask 'iterm2'
 cask 'keystore-explorer'
 cask 'font-jetbrains-mono'
