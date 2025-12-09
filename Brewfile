@@ -45,7 +45,8 @@ cask 'visual-studio-code'
 
 # Temurin Java
 cask 'temurin'
-cask 'temurin21'
-cask 'temurin17'
-cask 'temurin8'
-cask 'temurin11'
+cask 'temurin@25'
+cask 'temurin@21'
+cask 'temurin@17'
+cask 'temurin@8'
+cask 'temurin@11'
