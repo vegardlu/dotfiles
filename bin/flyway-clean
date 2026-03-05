@@ -1,0 +1,21 @@
+#!/bin/sh
+set -e
+
+if ! command -v flyway >/dev/null 2>&1; then
+  echo "Error: flyway is not installed. Run 'brew install flyway' first." >&2
+  exit 1
+fi
+
+if [ -z "$DATABASE_JDBC_URL" ] || [ -z "$DATABASE_USERNAME" ]; then
+  echo "Error: DATABASE_JDBC_URL and DATABASE_USERNAME must be set." >&2
+  exit 1
+fi
+
+echo "Database: $DATABASE_JDBC_URL (user: $DATABASE_USERNAME)"
+printf "Are you sure you want to clean this database? [y/N] "
+read -r confirm
+
+case "$confirm" in
+  y|Y) flyway clean -url="$DATABASE_JDBC_URL" -user="$DATABASE_USERNAME" -cleanDisabled=false ;;
+  *) echo "Aborted." ;;
+esac

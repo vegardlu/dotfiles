@@ -29,6 +29,7 @@ brew 'maven-completion'
 brew 'gradle'
 brew 'mvndaemon/mvnd/mvnd'
 brew 'gemini-cli'
+brew 'flyway'
 
 # Kubernetes / Cloud
 brew 'kubernetes-cli'
