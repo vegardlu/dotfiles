@@ -1,5 +1,5 @@
 # Aliases
-alias e='exa --icons --git -laTL 1'
+alias e='eza --icons --git -laTL 1'
 alias googlecloud='gcloud auth login'
 
 # Maven
