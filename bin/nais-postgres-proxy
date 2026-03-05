@@ -14,7 +14,7 @@ prompt()  { printf "${BOLD}? %s${RESET}" "$1"; }
 
 # --- Defaults ---
 DEFAULT_TEAM="eessibasis"
-DEFAULT_PORT="5432"
+DEFAULT_PORT="5611"
 DEFAULT_REASON=""
 DEFAULT_APP=""
 
@@ -27,7 +27,7 @@ Interactive wrapper around 'nais postgres proxy'.
 
 Options:
   --team TEAM       Team name
-  -p, --port PORT   Local port (default: $DEFAULT_PORT)
+  -p, --port PORT   Local port (default: 5611)
   --reason REASON   Access reason (required)
   -h, --help        Show this help message
 
