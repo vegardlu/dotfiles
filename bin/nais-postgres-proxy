@@ -1,0 +1,158 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# --- Color / emoji helpers (disable when not a TTY) ---
+if [ -t 1 ]; then
+  BOLD='\033[1m' GREEN='\033[0;32m' RED='\033[0;31m' RESET='\033[0m'
+else
+  BOLD='' GREEN='' RED='' RESET=''
+fi
+
+success() { printf "${GREEN}✓${RESET} %s\n" "$*"; }
+error()   { printf "${RED}✗${RESET} %s\n" "$*" >&2; }
+prompt()  { printf "${BOLD}? %s${RESET}" "$1"; }
+
+# --- Defaults ---
+DEFAULT_TEAM=""
+DEFAULT_PORT="5432"
+DEFAULT_REASON=""
+DEFAULT_APP=""
+
+# --- Usage ---
+usage() {
+  cat <<EOF
+Usage: $(basename "$0") [OPTIONS] [APP_NAME]
+
+Interactive wrapper around 'nais postgres proxy'.
+
+Options:
+  --team TEAM       Team name
+  -p, --port PORT   Local port (default: $DEFAULT_PORT)
+  --reason REASON   Access reason (required)
+  -h, --help        Show this help message
+
+Examples:
+  $(basename "$0")                                    # fully interactive
+  $(basename "$0") --team myteam -p 5611 --reason "debugging" my-app
+EOF
+  exit 0
+}
+
+# --- Parse flags ---
+TEAM="" PORT="" REASON="" APP=""
+
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    -h|--help)   usage ;;
+    --team)      TEAM="$2"; shift 2 ;;
+    -p|--port)   PORT="$2"; shift 2 ;;
+    --reason)    REASON="$2"; shift 2 ;;
+    -*)          error "Unknown option: $1"; usage ;;
+    *)           APP="$1"; shift ;;
+  esac
+done
+
+# --- Interactive prompts (only ask for values not supplied via flags) ---
+printf "\n🐘 ${BOLD}NAIS Postgres Proxy${RESET}\n\n"
+
+if [ -z "$TEAM" ]; then
+  prompt "Team: ($DEFAULT_TEAM) "
+  read -r TEAM
+  TEAM="${TEAM:-$DEFAULT_TEAM}"
+fi
+
+if [ -z "$PORT" ]; then
+  prompt "Port: ($DEFAULT_PORT) "
+  read -r PORT
+  PORT="${PORT:-$DEFAULT_PORT}"
+fi
+
+if [ -z "$REASON" ]; then
+  while true; do
+    prompt "Reason: ($DEFAULT_REASON) "
+    read -r REASON
+    REASON="${REASON:-$DEFAULT_REASON}"
+    [ -n "$REASON" ] && break
+    error "Reason cannot be empty."
+  done
+fi
+
+if [ -z "$APP" ]; then
+  prompt "App/database name: ($DEFAULT_APP) "
+  read -r APP
+  APP="${APP:-$DEFAULT_APP}"
+fi
+
+# --- Validate required fields ---
+if [ -z "$TEAM" ]; then
+  error "Team is required."; exit 1
+fi
+if [ -z "$REASON" ]; then
+  error "Reason is required."; exit 1
+fi
+if [ -z "$APP" ]; then
+  error "App/database name is required."; exit 1
+fi
+
+# --- Authentication checks ---
+if ! command -v nais >/dev/null 2>&1; then
+  error "nais CLI is not installed. Install it first (see https://doc.nais.io/operate/cli/install/)."
+  exit 1
+fi
+
+if ! gcloud auth print-access-token >/dev/null 2>&1; then
+  error "You are not authenticated with Google Cloud."
+  printf "\n  Run the following to authenticate:\n\n"
+  printf "    nais auth login\n"
+  printf "    nais auth login --nais\n\n"
+  printf "  This will open a browser window. After authenticating, re-run this command.\n\n"
+  exit 1
+fi
+
+# --- Auto-discover database name if not found ---
+discover_databases() {
+  local ns="$1"
+  if ! kubectl cluster-info >/dev/null 2>&1; then
+    error "Cannot connect to Kubernetes cluster. Check your kubectl context."
+    exit 1
+  fi
+  kubectl get sqldatabases -n "$ns" -o custom-columns=NAME:.metadata.name --no-headers 2>/dev/null
+}
+
+# Test if the app/database exists by doing a dry check via kubectl
+if ! kubectl get sqldatabase "$APP" -n "$TEAM" >/dev/null 2>&1; then
+  printf "\n"
+  error "Database '$APP' not found in namespace '$TEAM'."
+  printf "\n  Discovering available databases...\n\n"
+
+  mapfile -t DBS < <(discover_databases "$TEAM")
+
+  if [ ${#DBS[@]} -eq 0 ]; then
+    error "No databases found in namespace '$TEAM'."
+    exit 1
+  fi
+
+  printf "  Available databases:\n\n"
+  for i in "${!DBS[@]}"; do
+    printf "    %d) %s\n" $((i + 1)) "${DBS[$i]}"
+  done
+  printf "\n"
+
+  while true; do
+    prompt "Select database [1-${#DBS[@]}]: "
+    read -r choice
+    if [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le "${#DBS[@]}" ]; then
+      APP="${DBS[$((choice - 1))]}"
+      break
+    fi
+    error "Invalid selection."
+  done
+fi
+
+# --- Run proxy ---
+CMD="nais postgres proxy --team ${TEAM} -p ${PORT} --reason \"${REASON}\" ${APP}"
+printf "\n"
+success "Starting proxy: $CMD"
+printf "\n"
+
+exec nais postgres proxy --team "$TEAM" -p "$PORT" --reason "$REASON" "$APP"
