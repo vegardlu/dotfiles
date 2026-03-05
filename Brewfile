@@ -1,52 +1,69 @@
-# Tap
-tap 'homebrew/cask'
-tap 'homebrew/cask-fonts'
-tap 'homebrew/cask-versions'
+# Taps
+tap 'azure/kubelogin'
+tap 'hashicorp/tap'
+tap 'mvndaemon/mvnd'
+tap 'nais/tap'
 
-# Div
+# Core tools
 brew 'coreutils'
-brew 'bash-completion'
 brew 'git'
-brew 'bash-git-prompt'
-brew 'z'
-brew 'speedtest-cli'
 brew 'gh'
-brew 'cask'
-brew 'zsh'
-brew 'zsh-syntax-highlighting'
-brew 'maven'
-brew 'maven-completion'
-brew 'cheat'
 brew 'vim'
 brew 'wget'
-brew 'helm'
-brew 'python'
-brew 'brew-pip'
-brew 'node'
-brew 'npm'
-brew 'exa'
-brew 'kubeseal'
-brew 'thefuck'
+
+# Shell
+brew 'bash-completion'
+brew 'bash-git-prompt'
+brew 'zsh'
+brew 'zsh-syntax-highlighting'
 brew 'fish'
 brew 'starship'
-brew 'kubernetes-cli'
-brew 'mkdocs'
-brew 'mvndaemon/homebrew-mvnd/mvnd'
-brew 'kubectx'
+brew 'z'
+brew 'thefuck'
+
+# Development
+brew 'node'
+brew 'python@3.14'
+brew 'maven'
+brew 'maven-completion'
 brew 'gradle'
+brew 'mvndaemon/mvnd/mvnd'
 brew 'gemini-cli'
 
+# Kubernetes / Cloud
+brew 'kubernetes-cli'
+brew 'kubectx'
+brew 'kubeseal'
+brew 'helm'
+brew 'azure-cli'
+brew 'azure/kubelogin/kubelogin'
+brew 'hashicorp/tap/vault'
+brew 'cloudflared'
+brew 'nais/tap/nais'
+
+# Utilities
+brew 'eza'
+brew 'cheat'
+brew 'speedtest-cli'
+brew 'mkdocs'
+
 # Casks
+cask 'ghostty'
 cask 'iterm2'
+cask 'visual-studio-code'
+cask 'copilot-cli'
+cask 'docker-desktop'
 cask 'keystore-explorer'
+cask 'alfred'
+cask 'discord'
+cask 'nais/tap/naisdevice'
+
+# Fonts
 cask 'font-jetbrains-mono'
 cask 'font-jetbrains-mono-nerd-font'
-cask 'visual-studio-code'
 
-# Temurin Java
+# Java (Temurin)
 cask 'temurin'
 cask 'temurin@25'
 cask 'temurin@21'
 cask 'temurin@17'
-cask 'temurin@8'
-cask 'temurin@11'

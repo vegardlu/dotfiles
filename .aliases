@@ -25,4 +25,4 @@ alias 🦉='git add .'
 alias 🍰='git commit -m '
 
 # Exa
-alias e='exa --icons --git -laTL 1'
+alias e='eza --icons --git -laTL 1'
