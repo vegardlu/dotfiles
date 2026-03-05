@@ -6,7 +6,7 @@
 which brew 1>&/dev/null
 if [ ! "$?" -eq 0 ] ; then
 	echo "Homebrew not installed. Attempting to install Homebrew"
-	/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 	if [ ! "$?" -eq 0 ] ; then
 		echo "Something went wrong. Exiting..." && exit 1
 	fi
@@ -19,4 +19,4 @@ brew update
 brew upgrade
 
 # Brewfile
-brew bundle
+brew bundle --no-lock
