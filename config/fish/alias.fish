@@ -9,13 +9,13 @@ alias mvnitp="mvn clean install -Dpackaging=true -Dintegration-test=true"
 alias mvnf='mvn install -DskipTests -pl \!(find *schemas -maxdepth 0)'
 
 # Java
-alias java8='export JAVA_HOME=$JAVA_8_HOME'
-alias java8oracle='export JAVA_HOME=$JAVA_8_HOME_ORACLE'
 alias java11='export JAVA_HOME=$JAVA_11_HOME'
-alias java12='export JAVA_HOME=$JAVA_12_HOME'
 alias java17='export JAVA_HOME=$JAVA_17_HOME'
 alias java21='export JAVA_HOME=$JAVA_21_HOME'
 alias java25='export JAVA_HOME=$JAVA_25_HOME'
+
+# Dotfiles
+alias dotfiles='bash ~/workspace/dotfiles/bootstrap.sh'
 
 # Docker
 alias docker-compose-dev='docker compose -f ~/workspace/docker-compose-dev/docker-compose.yml'
