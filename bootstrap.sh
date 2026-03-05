@@ -20,9 +20,9 @@ link () {
         ln -svf "$PWD/.functions" "$HOME"
         ln -svf "$PWD/.vimrc" "$HOME"
         ln -svf "$PWD/.aliases" "$HOME"
-        ln -svf "$PWD/config/.bash_profile" "$HOME/.bash_profile"
-        ln -svf "$PWD/config/.zshenv" "$HOME/.zshenv"
-        ln -svf "$PWD/config/.zshrc" "$HOME/.zshrc"
+        ln -svf "$PWD/config/bash/.bash_profile" "$HOME/.bash_profile"
+        ln -svf "$PWD/config/zsh/.zshenv" "$HOME/.zshenv"
+        ln -svf "$PWD/config/zsh/.zshrc" "$HOME/.zshrc"
         ln -svf "$PWD/config/fish/config.fish" "$HOME/.config/fish/config.fish"
         ln -svf "$PWD/config/fish/alias.fish" "$HOME/.config/fish/alias.fish"
         ln -svf "$PWD/config/fish/local.fish" "$HOME/.config/fish/local.fish"
@@ -96,4 +96,3 @@ init
 link
 install_tools
 env_file
-link

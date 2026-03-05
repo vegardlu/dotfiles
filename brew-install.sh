@@ -15,8 +15,5 @@ fi
 # Make sure we’re using the latest Homebrew
 brew update
 
-# Upgrade any already-installed formulae
-brew upgrade
-
-# Brewfile
-brew bundle --no-lock
+# Install and upgrade Brewfile dependencies
+brew bundle
