@@ -1,4 +1,5 @@
 format="$directory$all$character"
+command_timeout = 1500
 
 [java]
 format = 'via [${symbol}(${version} )](cyan)'
