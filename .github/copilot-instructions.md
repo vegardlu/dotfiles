@@ -34,3 +34,7 @@ Add to `config/fish/alias.fish` with a section comment grouping related aliases.
 
 ### Symlinks
 When adding new config files that need to live in `$HOME` or `~/.config/`, add the symlink mapping to the `links` array in `bootstrap.sh`'s `task_symlinks` function.
+
+### Git commits
+- Write all commit messages starting with an appropriate emoji for the change (e.g., ✨ for new features, 🐛 for bug fixes, 📝 for docs, ♻️ for refactoring, 🔧 for config changes, 🎨 for style/formatting).
+- Always `git add` and `git commit` changes — do not leave uncommitted work.
