@@ -90,9 +90,6 @@ fi
 if [ -z "$REASON" ]; then
   error "Reason is required."; exit 1
 fi
-if [ -z "$APP" ]; then
-  error "App/database name is required."; exit 1
-fi
 
 # --- Authentication checks ---
 if ! command -v nais >/dev/null 2>&1; then
@@ -109,7 +106,7 @@ if ! gcloud auth print-access-token >/dev/null 2>&1; then
   exit 1
 fi
 
-# --- Auto-discover database name if not found ---
+# --- Auto-discover database name ---
 discover_databases() {
   local ns="$1"
   if ! kubectl cluster-info >/dev/null 2>&1; then
@@ -119,13 +116,13 @@ discover_databases() {
   kubectl get sqldatabases -n "$ns" -o custom-columns=NAME:.metadata.name --no-headers 2>/dev/null
 }
 
-# Test if the app/database exists by doing a dry check via kubectl
-if ! kubectl get sqldatabase "$APP" -n "$TEAM" >/dev/null 2>&1; then
-  printf "\n"
-  error "Database '$APP' not found in namespace '$TEAM'."
-  printf "\n  Discovering available databases...\n\n"
+if [ -z "$APP" ]; then
+  printf "\n  No app/database name given. Discovering available databases...\n\n"
 
-  mapfile -t DBS < <(discover_databases "$TEAM")
+  DBS=()
+  while IFS= read -r line; do
+    [ -n "$line" ] && DBS+=("$line")
+  done < <(discover_databases "$TEAM")
 
   if [ ${#DBS[@]} -eq 0 ]; then
     error "No databases found in namespace '$TEAM'."
