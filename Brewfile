@@ -2,6 +2,7 @@
 tap 'azure/kubelogin'
 tap 'hashicorp/tap'
 tap 'mvndaemon/mvnd'
+tap 'atlassian/homebrew-acli'
 tap 'nais/tap'
 
 # Core tools
@@ -43,6 +44,7 @@ brew 'cloudflared'
 brew 'nais/tap/nais'
 
 # Utilities
+brew 'atlassian/homebrew-acli/acli'
 brew 'eza'
 brew 'cheat'
 brew 'speedtest-cli'
