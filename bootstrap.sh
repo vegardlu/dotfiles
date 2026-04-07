@@ -47,6 +47,7 @@ task_symlinks() {
         "$DOTFILES/config/bash/.bash_profile:$HOME/.bash_profile"
         "$DOTFILES/config/zsh/.zshenv:$HOME/.zshenv"
         "$DOTFILES/config/zsh/.zshrc:$HOME/.zshrc"
+        "$DOTFILES/config/zsh/.zprofile:$HOME/.zprofile"
         "$DOTFILES/config/fish/config.fish:$HOME/.config/fish/config.fish"
         "$DOTFILES/config/fish/alias.fish:$HOME/.config/fish/alias.fish"
         "$DOTFILES/config/fish/local.fish:$HOME/.config/fish/local.fish"
