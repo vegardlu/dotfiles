@@ -1,0 +1,432 @@
+#!/usr/bin/env fish
+
+# bump-parent-pom — Update no.nav.eux:parent-pom across EUX repositories
+#
+# Usage: bump-parent-pom --from VERSION --to VERSION [OPTIONS]
+
+set -g REPOS \
+    eux-adresse-oppdatering \
+    eux-avslutt-rinasaker \
+    eux-avslutt-rinasaker-naisjob \
+    eux-barnetrygd \
+    eux-fagmodul-journalfoering \
+    eux-institusjon \
+    eux-journal \
+    eux-journalarkivar \
+    eux-journalarkivar-naisjob \
+    eux-nav-rinasak \
+    eux-nav-rinasak-datasync \
+    eux-neessi \
+    eux-oppgave \
+    eux-pdf \
+    eux-pdf-flattener \
+    eux-person-oppdatering \
+    eux-relaterte-rinasaker \
+    eux-rina-api \
+    eux-rina-terminator-api \
+    eux-saksbehandler \
+    eux-slett-usendte-rinasaker \
+    eux-slett-usendte-rinasaker-naisjob
+
+function usage
+    echo "Usage: bump-parent-pom --from VERSION --to VERSION [OPTIONS]"
+    echo ""
+    echo "Update no.nav.eux:parent-pom version across EUX repositories."
+    echo ""
+    echo "Options:"
+    echo "  --from VERSION       Current parent-pom version to match (required)"
+    echo "  --to VERSION         Target parent-pom version (required)"
+    echo "  --workspace DIR      Workspace directory (default: \$HOME/workspace)"
+    echo "  --dry-run            Show what would be done without making changes"
+    echo "  --no-wait            Skip waiting for CI builds"
+    echo "  --timeout MINUTES    CI wait timeout in minutes (default: 15)"
+    echo "  -h, --help           Show this help"
+    echo ""
+    echo "Examples:"
+    echo "  bump-parent-pom --from 2.0.7 --to 2.0.8"
+    echo "  bump-parent-pom --from 2.0.7 --to 2.0.8 --dry-run"
+    echo "  bump-parent-pom --from 2.0.7 --to 2.0.8 --no-wait"
+end
+
+# ── Parse arguments ──────────────────────────────────────────────────────────
+
+set -l from_version ""
+set -l to_version ""
+set -l workspace "$HOME/workspace"
+set -l dry_run false
+set -l no_wait false
+set -l timeout_minutes 15
+
+set -l i 1
+while test $i -le (count $argv)
+    switch $argv[$i]
+        case --from
+            set i (math $i + 1)
+            set from_version $argv[$i]
+        case --to
+            set i (math $i + 1)
+            set to_version $argv[$i]
+        case --workspace
+            set i (math $i + 1)
+            set workspace $argv[$i]
+        case --dry-run
+            set dry_run true
+        case --no-wait
+            set no_wait true
+        case --timeout
+            set i (math $i + 1)
+            set timeout_minutes $argv[$i]
+        case -h --help
+            usage
+            return 0
+        case '*'
+            echo (set_color red)"✗ Unknown option: $argv[$i]"(set_color normal)
+            usage
+            return 1
+    end
+    set i (math $i + 1)
+end
+
+if test -z "$from_version" -o -z "$to_version"
+    echo (set_color red)"✗ --from and --to are required"(set_color normal)
+    echo ""
+    usage
+    return 1
+end
+
+# ── Preflight checks ────────────────────────────────────────────────────────
+
+echo ""
+echo (set_color --bold)"📦 Bump parent-pom: $from_version → $to_version"(set_color normal)
+echo ""
+
+for cmd in git gh sed
+    if not command -q $cmd
+        echo (set_color red)"✗ Required tool '$cmd' is not installed."(set_color normal)
+        return 1
+    end
+end
+
+if not gh auth status &>/dev/null
+    echo (set_color red)"✗ Not authenticated with GitHub. Run: gh auth login"(set_color normal)
+    return 1
+end
+
+if not test -d "$workspace"
+    echo (set_color red)"✗ Workspace directory not found: $workspace"(set_color normal)
+    return 1
+end
+
+if test "$dry_run" = true
+    echo (set_color yellow)"⚠  DRY RUN — no changes will be made"(set_color normal)
+    echo ""
+end
+
+set -l branch "bump-parent-pom-$to_version"
+
+# ── Result tracking ──────────────────────────────────────────────────────────
+
+set -g result_repos
+set -g result_from
+set -g result_to
+set -g result_prs
+set -g result_status
+
+# ── Helper: get parent POM version from pom.xml ─────────────────────────────
+
+function get_parent_pom_version
+    set -l pom $argv[1]
+    sed -n '/<parent>/,/<\/parent>/p' $pom | grep '<version>' | sed 's/.*<version>\(.*\)<\/version>.*/\1/' | string trim
+end
+
+function get_parent_pom_group
+    set -l pom $argv[1]
+    sed -n '/<parent>/,/<\/parent>/p' $pom | grep '<groupId>' | sed 's/.*<groupId>\(.*\)<\/groupId>.*/\1/' | string trim
+end
+
+function get_parent_pom_artifact
+    set -l pom $argv[1]
+    sed -n '/<parent>/,/<\/parent>/p' $pom | grep '<artifactId>' | sed 's/.*<artifactId>\(.*\)<\/artifactId>.*/\1/' | string trim
+end
+
+# ── Helper: track result ─────────────────────────────────────────────────────
+
+function track_result
+    set -a result_repos $argv[1]
+    set -a result_from $argv[2]
+    set -a result_to $argv[3]
+    set -a result_prs $argv[4]
+    set -a result_status $argv[5]
+end
+
+# ── Process repos ────────────────────────────────────────────────────────────
+
+set -l pr_repos
+set -l pr_numbers
+set -l pr_urls
+
+for repo in $REPOS
+    set -l repo_dir "$workspace/$repo"
+
+    # Check repo exists
+    if not test -d "$repo_dir"
+        echo (set_color yellow)"  ⊘ $repo — directory not found, skipping"(set_color normal)
+        track_result $repo "-" "-" "-" "skipped: not found"
+        continue
+    end
+
+    # Check pom.xml exists
+    if not test -f "$repo_dir/pom.xml"
+        echo (set_color yellow)"  ⊘ $repo — no pom.xml, skipping"(set_color normal)
+        track_result $repo "-" "-" "-" "skipped: no pom.xml"
+        continue
+    end
+
+    cd $repo_dir
+
+    # Check for clean working tree
+    set -l porcelain_output (git status --porcelain -- pom.xml)
+    if test -n "$porcelain_output"
+        echo (set_color yellow)"  ⊘ $repo — pom.xml has uncommitted changes, skipping"(set_color normal)
+        track_result $repo "-" "-" "-" "skipped: dirty"
+        continue
+    end
+
+    # Checkout main and pull
+    set -l main_branch main
+    if not git rev-parse --verify main &>/dev/null
+        if git rev-parse --verify master &>/dev/null
+            set main_branch master
+        else
+            echo (set_color yellow)"  ⊘ $repo — no main/master branch, skipping"(set_color normal)
+            track_result $repo "-" "-" "-" "skipped: no main"
+            continue
+        end
+    end
+
+    git checkout $main_branch --quiet 2>/dev/null
+    git pull --ff-only --quiet 2>/dev/null
+
+    # Check parent POM identity and version
+    set -l group (get_parent_pom_group "$repo_dir/pom.xml")
+    set -l artifact (get_parent_pom_artifact "$repo_dir/pom.xml")
+    set -l current_version (get_parent_pom_version "$repo_dir/pom.xml")
+
+    if test "$group" != "no.nav.eux" -o "$artifact" != "parent-pom"
+        echo (set_color yellow)"  ⊘ $repo — not using parent-pom, skipping"(set_color normal)
+        track_result $repo "$current_version" "-" "-" "skipped: wrong parent"
+        continue
+    end
+
+    if test "$current_version" != "$from_version"
+        echo (set_color yellow)"  ⊘ $repo — version is $current_version (not $from_version), skipping"(set_color normal)
+        track_result $repo "$current_version" "-" "-" "skipped: version mismatch"
+        continue
+    end
+
+    # Dry run stops here
+    if test "$dry_run" = true
+        echo (set_color cyan)"  ● $repo — would update $from_version → $to_version"(set_color normal)
+        track_result $repo $from_version $to_version "-" "dry-run"
+        continue
+    end
+
+    # Check if branch already exists (local or remote)
+    if git rev-parse --verify $branch &>/dev/null
+        git branch -D $branch --quiet 2>/dev/null
+    end
+    if git rev-parse --verify origin/$branch &>/dev/null
+        # Check if a PR already exists for this branch
+        set -l existing_pr (gh pr list --head $branch --json number,url --jq '.[0].url')
+        if test $status -ne 0
+            echo (set_color yellow)"  ⊘ $repo — could not check for existing PR, skipping"(set_color normal)
+            track_result $repo $from_version "-" "-" "skipped: gh error"
+            continue
+        end
+        if test -n "$existing_pr"
+            echo (set_color green)"  ✓ $repo — PR already exists: $existing_pr"(set_color normal)
+            set -l pr_num (gh pr list --head $branch --json number --jq '.[0].number')
+            track_result $repo $from_version $to_version $existing_pr "pr exists"
+            set -a pr_repos $repo
+            set -a pr_numbers $pr_num
+            set -a pr_urls $existing_pr
+            continue
+        end
+        git push origin --delete $branch --quiet 2>/dev/null
+    end
+
+    # Create branch
+    git checkout -b $branch --quiet 2>/dev/null
+
+    # Update version in parent block only
+    if test (uname) = Darwin
+        sed -i '' "/<parent>/,/<\\/parent>/ s|<version>$from_version</version>|<version>$to_version</version>|" pom.xml
+    else
+        sed -i "/<parent>/,/<\\/parent>/ s|<version>$from_version</version>|<version>$to_version</version>|" pom.xml
+    end
+
+    # Verify the change actually happened
+    set -l new_version (get_parent_pom_version "$repo_dir/pom.xml")
+    if test "$new_version" != "$to_version"
+        echo (set_color red)"  ✗ $repo — sed replacement failed"(set_color normal)
+        git checkout $main_branch --quiet 2>/dev/null
+        git branch -D $branch --quiet 2>/dev/null
+        track_result $repo $from_version "-" "-" "error: sed failed"
+        continue
+    end
+
+    # Check if there's actually a diff
+    if git diff --quiet -- pom.xml
+        echo (set_color yellow)"  ⊘ $repo — no changes after update, skipping"(set_color normal)
+        git checkout $main_branch --quiet 2>/dev/null
+        git branch -D $branch --quiet 2>/dev/null
+        track_result $repo $from_version $to_version "-" "skipped: no diff"
+        continue
+    end
+
+    # Commit and push
+    git add pom.xml
+    git commit -m "Bump parent-pom from $from_version to $to_version
+
+Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>" --quiet
+
+    git push origin $branch --quiet 2>/dev/null
+    if test $status -ne 0
+        echo (set_color red)"  ✗ $repo — push failed"(set_color normal)
+        git checkout $main_branch --quiet 2>/dev/null
+        git branch -D $branch --quiet 2>/dev/null
+        track_result $repo $from_version $to_version "-" "error: push failed"
+        continue
+    end
+
+    # Create PR
+    set -l pr_url (gh pr create \
+        --title "Bump parent-pom from $from_version to $to_version" \
+        --body "Bumps \`no.nav.eux:parent-pom\` from $from_version to $to_version." \
+        --base $main_branch \
+        --head $branch 2>&1)
+
+    if test $status -eq 0
+        set -l pr_num (string match -r '/pull/(\d+)' $pr_url)[2]
+        echo (set_color green)"  ✓ $repo — PR created: $pr_url"(set_color normal)
+        track_result $repo $from_version $to_version $pr_url "pr created"
+        set -a pr_repos $repo
+        set -a pr_numbers $pr_num
+        set -a pr_urls $pr_url
+    else
+        echo (set_color red)"  ✗ $repo — PR creation failed: $pr_url"(set_color normal)
+        track_result $repo $from_version $to_version "-" "error: pr failed"
+    end
+end
+
+# ── Wait for CI builds ───────────────────────────────────────────────────────
+
+if test "$no_wait" = true -o (count $pr_repos) -eq 0
+    # Skip waiting
+else
+    echo ""
+    echo (set_color --bold)"⏳ Waiting for CI builds..."(set_color normal)
+
+    set -l timeout_seconds (math "$timeout_minutes * 60")
+    set -l poll_interval 30
+    set -l elapsed 0
+
+    # Track which repos are still pending
+    set -l pending_indices
+    for idx in (seq (count $pr_repos))
+        set -a pending_indices $idx
+    end
+
+    while test (count $pending_indices) -gt 0 -a $elapsed -lt $timeout_seconds
+        sleep $poll_interval
+        set elapsed (math $elapsed + $poll_interval)
+
+        set -l still_pending
+        for idx in $pending_indices
+            set -l repo $pr_repos[$idx]
+            set -l pr_num $pr_numbers[$idx]
+            cd "$workspace/$repo"
+
+            # Use --json for reliable parsing of check status
+            set -l checks_json (gh pr checks $pr_num --json name,state 2>/dev/null)
+            if test $status -ne 0
+                set -a still_pending $idx
+                continue
+            end
+
+            # Count states across all checks
+            set -l total (echo $checks_json | grep -c '"state"' 2>/dev/null; or echo 0)
+            set -l failing (echo $checks_json | grep -c '"FAILURE\|"ERROR\|"CANCELLED' 2>/dev/null; or echo 0)
+            set -l pending_count (echo $checks_json | grep -c '"PENDING\|"QUEUED\|"IN_PROGRESS\|"WAITING\|"REQUESTED' 2>/dev/null; or echo 0)
+
+            if test "$total" -eq 0
+                # No checks registered yet
+                set -a still_pending $idx
+            else if test "$failing" -gt 0
+                echo (set_color red)"  ✗ $repo — build failed"(set_color normal)
+                for ridx in (seq (count $result_repos))
+                    if test "$result_repos[$ridx]" = "$repo"
+                        set result_status[$ridx] "❌ fail"
+                    end
+                end
+            else if test "$pending_count" -gt 0
+                set -a still_pending $idx
+            else
+                echo (set_color green)"  ✓ $repo — build passed"(set_color normal)
+                for ridx in (seq (count $result_repos))
+                    if test "$result_repos[$ridx]" = "$repo"
+                        set result_status[$ridx] "✅ pass"
+                    end
+                end
+            end
+        end
+
+        set pending_indices $still_pending
+        if test (count $pending_indices) -gt 0
+            echo (set_color yellow)"  … $elapsed""s elapsed — "(count $pending_indices)" builds pending"(set_color normal)
+        end
+    end
+
+    # Mark timeouts
+    for idx in $pending_indices
+        set -l repo $pr_repos[$idx]
+        echo (set_color yellow)"  ⊘ $repo — build timed out"(set_color normal)
+        for ridx in (seq (count $result_repos))
+            if test "$result_repos[$ridx]" = "$repo"
+                set result_status[$ridx] "⏱ timeout"
+            end
+        end
+    end
+end
+
+# ── Summary table ────────────────────────────────────────────────────────────
+
+echo ""
+echo (set_color --bold)"Summary"(set_color normal)
+echo ""
+
+# Column widths
+set -l col_repo 38
+set -l col_from 10
+set -l col_to 10
+set -l col_status 24
+
+printf "%-"$col_repo"s %-"$col_from"s %-"$col_to"s %-"$col_status"s %s\n" \
+    "Repo" "From" "To" "Status" "PR"
+printf "%-"$col_repo"s %-"$col_from"s %-"$col_to"s %-"$col_status"s %s\n" \
+    (string repeat -n $col_repo "─") \
+    (string repeat -n $col_from "─") \
+    (string repeat -n $col_to "─") \
+    (string repeat -n $col_status "─") \
+    (string repeat -n 50 "─")
+
+for idx in (seq (count $result_repos))
+    printf "%-"$col_repo"s %-"$col_from"s %-"$col_to"s %-"$col_status"s %s\n" \
+        $result_repos[$idx] \
+        $result_from[$idx] \
+        $result_to[$idx] \
+        "$result_status[$idx]" \
+        $result_prs[$idx]
+end
+
+echo ""
