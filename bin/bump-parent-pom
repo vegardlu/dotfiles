@@ -355,9 +355,9 @@ else
             end
 
             # Count states across all checks
-            set -l total (echo $checks_json | grep -c '"state"' 2>/dev/null; or echo 0)
-            set -l failing (echo $checks_json | grep -c '"FAILURE\|"ERROR\|"CANCELLED' 2>/dev/null; or echo 0)
-            set -l pending_count (echo $checks_json | grep -c '"PENDING\|"QUEUED\|"IN_PROGRESS\|"WAITING\|"REQUESTED' 2>/dev/null; or echo 0)
+            set -l total (echo $checks_json | string match -ra '"state"' | count)
+            set -l failing (echo $checks_json | string match -ra '"(?:FAILURE|ERROR|CANCELLED)' | count)
+            set -l pending_count (echo $checks_json | string match -ra '"(?:PENDING|QUEUED|IN_PROGRESS|WAITING|REQUESTED)' | count)
 
             if test "$total" -eq 0
                 # No checks registered yet
