@@ -1,0 +1,18 @@
+#!/bin/sh
+set -e
+
+if ! command -v colima >/dev/null 2>&1; then
+  echo "Error: colima is not installed. Run 'brew install colima' first." >&2
+  exit 1
+fi
+
+CPU="${COLIMA_CPU:-4}"
+MEMORY="${COLIMA_MEMORY:-8}"
+
+echo "Starting Colima (cpu: $CPU, memory: ${MEMORY}GB, vm-type: vz, mount-type: virtiofs)"
+colima start \
+  --cpu "$CPU" \
+  --memory "$MEMORY" \
+  --vm-type=vz \
+  --mount-type=virtiofs \
+  "$@"
