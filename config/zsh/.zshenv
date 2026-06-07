@@ -1,6 +1,3 @@
-# z directory jumping
-[[ -f /opt/homebrew/etc/profile.d/z.sh ]] && . /opt/homebrew/etc/profile.d/z.sh
-
 # Docker / colima. Testcontainers does not read the active docker context, so it
 # needs DOCKER_HOST pointed at colima's socket; the override gives Ryuk the
 # in-VM socket path to bind-mount. Guarded so the dotfiles stay portable.

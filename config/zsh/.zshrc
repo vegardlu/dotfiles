@@ -41,3 +41,6 @@ fi
 
 # ─── Prompt (Starship) ────────────────────────────────────
 eval "$(starship init zsh)"
+
+# ─── zoxide (z replacement, directory jumping) ────────────
+command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"

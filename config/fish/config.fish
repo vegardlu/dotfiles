@@ -38,6 +38,9 @@ set -g fish_color_valid_path --underline
 # My Starship
 starship init fish | source
 
+# Zoxide directory jumping
+zoxide init fish | source
+
 # Java 25
 java25
 
