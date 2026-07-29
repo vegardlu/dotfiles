@@ -9,6 +9,13 @@ set -xg JAVA_25_HOME (/usr/libexec/java_home -v25)
 
 set -xg JAVA {$JAVA_21_HOME}/jre/bin/java
 
+# Android SDK, managed by Android Studio. Gradle resolves the SDK from
+# ANDROID_HOME, which is what lets an Android project build without a
+# local.properties. Guarded so the dotfiles stay portable.
+if test -d "$HOME/Library/Android/sdk"
+    set -xg ANDROID_HOME "$HOME/Library/Android/sdk"
+end
+
 # Docker / colima. Testcontainers does not read the active docker context, so it
 # needs DOCKER_HOST pointed at colima's socket; the override gives Ryuk the
 # in-VM socket path to bind-mount. Guarded so the dotfiles stay portable.

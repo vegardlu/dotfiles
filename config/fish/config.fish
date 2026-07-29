@@ -12,6 +12,17 @@ set PATH /opt/homebrew/bin /opt/homebrew/sbin $PATH
 set PATH /usr/local/bin /usr/bin /bin /usr/sbin /sbin /usr/local/bin /usr/bin /bin /usr/sbin /sbin $PATH
 set PATH $HOME/workspace/dotfiles/bin $PATH
 
+# Android SDK tools (ANDROID_HOME comes from export.fish, sourced above).
+# Appended, not prepended — these must never shadow a Homebrew binary. Each
+# directory is tested because Studio installs them piecemeal: platform-tools
+# (adb) and emulator arrive with the SDK, cmdline-tools (sdkmanager,
+# avdmanager) only if you ask for them.
+if set -q ANDROID_HOME
+    for dir in platform-tools emulator cmdline-tools/latest/bin
+        test -d $ANDROID_HOME/$dir; and fish_add_path --global --append $ANDROID_HOME/$dir
+    end
+end
+
 # Fish syntax highlighting
 set -g fish_color_autosuggestion '555'  'brblack'
 set -g fish_color_cancel -r
