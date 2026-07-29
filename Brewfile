@@ -80,6 +80,8 @@ brew 'eza'
 brew 'cheat'
 brew 'teamookla/speedtest/speedtest'
 brew 'mkdocs'
+brew 'cliclick'
+brew 'scrcpy'
 
 # Casks
 cask 'ghostty'
@@ -90,6 +92,10 @@ cask 'keystore-explorer'
 cask 'alfred'
 cask 'discord'
 cask 'nais/tap/naisdevice'
+cask 'antigravity-cli'
+cask 'vegardlu/cue/cue-desktop'
+cask 'android-studio'
+cask 'android-commandlinetools'
 
 # Fonts
 cask 'font-jetbrains-mono'
