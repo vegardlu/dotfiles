@@ -15,12 +15,25 @@ fi
 # because .zshenv runs again for every nested shell.
 if [ -d "$HOME/Library/Android/sdk" ]; then
     export ANDROID_HOME="$HOME/Library/Android/sdk"
-    for _android_dir in platform-tools emulator cmdline-tools/latest/bin; do
+
+    # cmdline-tools goes first, ahead of Homebrew: the android-commandlinetools
+    # cask links the same binaries, but that copy defaults to its own empty SDK
+    # root, so sdkmanager/avdmanager would quietly operate on nothing. This copy
+    # lives inside the SDK and resolves it without any --sdk_root flag.
+    _android_cli="$ANDROID_HOME/cmdline-tools/latest/bin"
+    case ":$PATH:" in
+        *":$_android_cli:"*) ;;
+        *) [ -d "$_android_cli" ] && export PATH="$_android_cli:$PATH" ;;
+    esac
+
+    # platform-tools and emulator go last — platform-tools ships its own sqlite3,
+    # which must not shadow /usr/bin/sqlite3.
+    for _android_dir in platform-tools emulator; do
         _android_path="$ANDROID_HOME/$_android_dir"
         case ":$PATH:" in
             *":$_android_path:"*) ;;
             *) [ -d "$_android_path" ] && export PATH="$PATH:$_android_path" ;;
         esac
     done
-    unset _android_dir _android_path
+    unset _android_cli _android_dir _android_path
 fi

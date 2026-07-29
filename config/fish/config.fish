@@ -13,13 +13,23 @@ set PATH /usr/local/bin /usr/bin /bin /usr/sbin /sbin /usr/local/bin /usr/bin /b
 set PATH $HOME/workspace/dotfiles/bin $PATH
 
 # Android SDK tools (ANDROID_HOME comes from export.fish, sourced above).
-# Appended, not prepended — these must never shadow a Homebrew binary. Each
-# directory is tested because Studio installs them piecemeal: platform-tools
-# (adb) and emulator arrive with the SDK, cmdline-tools (sdkmanager,
-# avdmanager) only if you ask for them.
+# cmdline-tools goes first, ahead of Homebrew: the android-commandlinetools cask
+# links the same binaries, but that copy defaults to its own empty SDK root, so
+# sdkmanager/avdmanager would quietly operate on nothing. This copy lives inside
+# the SDK and resolves it without any --sdk_root flag. platform-tools and
+# emulator go last — platform-tools ships its own sqlite3, which must not shadow
+# /usr/bin/sqlite3. fish_add_path can't express that ordering: its --append only
+# orders within fish_user_paths, a block fish prepends to PATH wholesale, so an
+# "appended" platform-tools still landed first and did shadow sqlite3.
 if set -q ANDROID_HOME
-    for dir in platform-tools emulator cmdline-tools/latest/bin
-        test -d $ANDROID_HOME/$dir; and fish_add_path --global --append $ANDROID_HOME/$dir
+    set -l cli $ANDROID_HOME/cmdline-tools/latest/bin
+    if test -d $cli; and not contains $cli $PATH
+        set -gx PATH $cli $PATH
+    end
+    for dir in platform-tools emulator
+        if test -d $ANDROID_HOME/$dir; and not contains $ANDROID_HOME/$dir $PATH
+            set -gx PATH $PATH $ANDROID_HOME/$dir
+        end
     end
 end
 
