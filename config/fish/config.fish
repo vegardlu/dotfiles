@@ -13,10 +13,12 @@ set PATH /usr/local/bin /usr/bin /bin /usr/sbin /sbin /usr/local/bin /usr/bin /b
 set PATH $HOME/workspace/dotfiles/bin $PATH
 
 # Android SDK tools (ANDROID_HOME comes from export.fish, sourced above).
-# cmdline-tools goes first, ahead of Homebrew: the android-commandlinetools cask
-# links the same binaries, but that copy defaults to its own empty SDK root, so
-# sdkmanager/avdmanager would quietly operate on nothing. This copy lives inside
-# the SDK and resolves it without any --sdk_root flag. platform-tools and
+# cmdline-tools goes first, ahead of Homebrew. Any Homebrew-linked copy of these
+# binaries (the android-commandlinetools cask) resolves to its own SDK root
+# rather than this one, so sdkmanager/avdmanager silently operate on an empty SDK
+# — it once swallowed a whole `sdkmanager --licenses` run. The copy inside the
+# SDK resolves correctly with no --sdk_root flag; keep it first so a reinstalled
+# cask can never take over again. platform-tools and
 # emulator go last — platform-tools ships its own sqlite3, which must not shadow
 # /usr/bin/sqlite3. fish_add_path can't express that ordering: its --append only
 # orders within fish_user_paths, a block fish prepends to PATH wholesale, so an

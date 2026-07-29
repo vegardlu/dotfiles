@@ -95,7 +95,6 @@ cask 'nais/tap/naisdevice'
 cask 'antigravity-cli'
 cask 'vegardlu/cue/cue-desktop'
 cask 'android-studio'
-cask 'android-commandlinetools'
 
 # Fonts
 cask 'font-jetbrains-mono'

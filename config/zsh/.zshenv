@@ -16,10 +16,12 @@ fi
 if [ -d "$HOME/Library/Android/sdk" ]; then
     export ANDROID_HOME="$HOME/Library/Android/sdk"
 
-    # cmdline-tools goes first, ahead of Homebrew: the android-commandlinetools
-    # cask links the same binaries, but that copy defaults to its own empty SDK
-    # root, so sdkmanager/avdmanager would quietly operate on nothing. This copy
-    # lives inside the SDK and resolves it without any --sdk_root flag.
+    # cmdline-tools goes first, ahead of Homebrew. Any Homebrew-linked copy of
+    # these binaries (the android-commandlinetools cask) resolves to its own SDK
+    # root rather than this one, so sdkmanager/avdmanager silently operate on an
+    # empty SDK — it once swallowed a whole `sdkmanager --licenses` run. The copy
+    # inside the SDK resolves it correctly with no --sdk_root flag; keep it first
+    # so a reinstalled cask can never take over again.
     _android_cli="$ANDROID_HOME/cmdline-tools/latest/bin"
     case ":$PATH:" in
         *":$_android_cli:"*) ;;
