@@ -1,5 +1,5 @@
 # Exports
-set -xg WORKSPACE "/Users/et31464/workspace"
+set -xg WORKSPACE "$HOME/workspace"
 
 # Java
 set -xg JAVA_11_HOME (/usr/libexec/java_home -v11)
@@ -7,7 +7,7 @@ set -xg JAVA_17_HOME (/usr/libexec/java_home -v17)
 set -xg JAVA_21_HOME (/usr/libexec/java_home -v21)
 set -xg JAVA_25_HOME (/usr/libexec/java_home -v25)
 
-set -xg JAVA {$JAVA_21_HOME}/jre/bin/java
+set -xg JAVA $JAVA_21_HOME/bin/java
 
 # Android SDK, managed by Android Studio. Gradle resolves the SDK from
 # ANDROID_HOME, which is what lets an Android project build without a

@@ -9,7 +9,7 @@ Nice! You want to give these dotfiles a try! You may want to first fork this rep
 - **Fish shell** as the primary shell, with [Starship](https://starship.rs) prompt, custom aliases, and completions
 - **Homebrew** package management with a curated [Brewfile](Brewfile) — dev tools, Kubernetes/cloud CLIs, casks, fonts, and multiple Java (Temurin) versions
 - **CLI commands** in `bin/` — handy scripts available system-wide
-- Config for **Bash**, **Zsh**, **Vim**, and **Starship** (all symlinked into place)
+- Config for **Bash**, **Zsh**, **Vim**, **Git**, and **Starship** (all symlinked into place)
 
 ## Installation
 
@@ -93,7 +93,9 @@ dotfiles/
     │   ├── alias.fish         # Shell aliases
     │   ├── export.fish        # Exported env vars (Java homes, workspace)
     │   ├── local.fish         # Machine-local env vars (not committed)
-    │   └── completions/       # Fish completions for CLI commands
+    │   ├── completions/       # Fish completions for CLI commands
+    │   └── functions/         # Fish functions (e.g. `cop`, Copilot CLI with pre-approved tools)
+    ├── git/                   # Git user config and global ignore (~/.config/git)
     ├── bash/.bash_profile
     ├── zsh/.zshenv, .zshrc
     └── starship.toml          # Starship prompt config

@@ -53,6 +53,8 @@ task_symlinks() {
         "$DOTFILES/config/fish/local.fish:$HOME/.config/fish/local.fish"
         "$DOTFILES/config/fish/export.fish:$HOME/.config/fish/export.fish"
         "$DOTFILES/config/fish/completions:$HOME/.config/fish/completions"
+        "$DOTFILES/config/fish/functions:$HOME/.config/fish/functions"
+        "$DOTFILES/config/git:$HOME/.config/git"
         "$DOTFILES/config/starship.toml:$HOME/.config/starship.toml"
     )
 

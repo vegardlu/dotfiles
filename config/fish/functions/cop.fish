@@ -1,0 +1,101 @@
+# cop - Launch Copilot CLI with pre-approved tool permissions
+# Reduces approval prompts for common read, build, git, and dev commands.
+# Use `copilot` directly for the default (prompted) experience.
+
+function cop
+    command copilot \
+        --allow-tool 'write' \
+        --allow-tool 'shell(ls)' \
+        --allow-tool 'shell(cat)' \
+        --allow-tool 'shell(head)' \
+        --allow-tool 'shell(tail)' \
+        --allow-tool 'shell(wc)' \
+        --allow-tool 'shell(sort)' \
+        --allow-tool 'shell(uniq)' \
+        --allow-tool 'shell(find)' \
+        --allow-tool 'shell(which)' \
+        --allow-tool 'shell(pwd)' \
+        --allow-tool 'shell(file)' \
+        --allow-tool 'shell(stat)' \
+        --allow-tool 'shell(du)' \
+        --allow-tool 'shell(df)' \
+        --allow-tool 'shell(tree)' \
+        --allow-tool 'shell(eza)' \
+        --allow-tool 'shell(realpath)' \
+        --allow-tool 'shell(dirname)' \
+        --allow-tool 'shell(basename)' \
+        --allow-tool 'shell(echo)' \
+        --allow-tool 'shell(printf)' \
+        --allow-tool 'shell(diff)' \
+        --allow-tool 'shell(less)' \
+        --allow-tool 'shell(env)' \
+        --allow-tool 'shell(printenv)' \
+        --allow-tool 'shell(whoami)' \
+        --allow-tool 'shell(hostname)' \
+        --allow-tool 'shell(uname)' \
+        --allow-tool 'shell(date)' \
+        --allow-tool 'shell(grep)' \
+        --allow-tool 'shell(rg)' \
+        --allow-tool 'shell(fd)' \
+        --allow-tool 'shell(ag)' \
+        --allow-tool 'shell(jq)' \
+        --allow-tool 'shell(sed)' \
+        --allow-tool 'shell(awk)' \
+        --allow-tool 'shell(xargs)' \
+        --allow-tool 'shell(curl)' \
+        --allow-tool 'shell(wget)' \
+        --allow-tool 'shell(git status)' \
+        --allow-tool 'shell(git log)' \
+        --allow-tool 'shell(git diff)' \
+        --allow-tool 'shell(git branch)' \
+        --allow-tool 'shell(git remote)' \
+        --allow-tool 'shell(git show)' \
+        --allow-tool 'shell(git rev-parse)' \
+        --allow-tool 'shell(git tag)' \
+        --allow-tool 'shell(git stash)' \
+        --allow-tool 'shell(git add)' \
+        --allow-tool 'shell(git commit)' \
+        --allow-tool 'shell(git checkout)' \
+        --allow-tool 'shell(git switch)' \
+        --allow-tool 'shell(git fetch)' \
+        --allow-tool 'shell(git merge)' \
+        --allow-tool 'shell(git rebase)' \
+        --allow-tool 'shell(git pull)' \
+        --allow-tool 'shell(gh:*)' \
+        --allow-tool 'shell(gradle:*)' \
+        --allow-tool 'shell(./gradlew:*)' \
+        --allow-tool 'shell(mvn:*)' \
+        --allow-tool 'shell(./mvnw:*)' \
+        --allow-tool 'shell(java)' \
+        --allow-tool 'shell(javac)' \
+        --allow-tool 'shell(kotlin)' \
+        --allow-tool 'shell(kotlinc)' \
+        --allow-tool 'shell(npm:*)' \
+        --allow-tool 'shell(npx)' \
+        --allow-tool 'shell(node)' \
+        --allow-tool 'shell(yarn:*)' \
+        --allow-tool 'shell(pnpm:*)' \
+        --allow-tool 'shell(tsc)' \
+        --allow-tool 'shell(eslint)' \
+        --allow-tool 'shell(prettier)' \
+        --allow-tool 'shell(vite)' \
+        --allow-tool 'shell(webpack)' \
+        --allow-tool 'shell(esbuild)' \
+        --allow-tool 'shell(mkdir)' \
+        --allow-tool 'shell(cp)' \
+        --allow-tool 'shell(mv)' \
+        --allow-tool 'shell(touch)' \
+        --allow-tool 'shell(chmod)' \
+        --allow-tool 'shell(tar)' \
+        --allow-tool 'shell(unzip)' \
+        --allow-tool 'shell(docker:*)' \
+        --allow-tool 'shell(docker-compose:*)' \
+        --allow-tool 'shell(python)' \
+        --allow-tool 'shell(python3)' \
+        --allow-tool 'shell(pip:*)' \
+        --allow-tool 'shell(pip3:*)' \
+        --allow-tool 'shell(make)' \
+        --allow-tool 'shell(cargo)' \
+        --allow-tool 'shell(go)' \
+        $argv
+end

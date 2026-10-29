@@ -11,6 +11,8 @@ source ~/.config/fish/export.fish
 set PATH /opt/homebrew/bin /opt/homebrew/sbin $PATH
 set PATH /usr/local/bin /usr/bin /bin /usr/sbin /sbin /usr/local/bin /usr/bin /bin /usr/sbin /sbin $PATH
 set PATH $HOME/workspace/dotfiles/bin $PATH
+# Claude Code's native installer and pipx both install here.
+set PATH $HOME/.local/bin $PATH
 
 # Android SDK tools (ANDROID_HOME comes from export.fish, sourced above).
 # cmdline-tools goes first, ahead of Homebrew. Any Homebrew-linked copy of these
@@ -66,6 +68,3 @@ zoxide init fish | source
 
 # Java 25
 java25
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/vegard/google-cloud-sdk/path.fish.inc' ]; . '/Users/vegard/google-cloud-sdk/path.fish.inc'; end
