@@ -33,7 +33,7 @@ bash ~/workspace/dotfiles/bootstrap.sh
 > The first `git` command on a fresh Mac asks to install the Xcode Command Line Tools. Accept the prompt, then run the clone again.
 
 > [!IMPORTANT]
-> Apps you installed by hand that are also in the Brewfile (JetBrains Toolbox, say) make `brew bundle` fail with "It seems there is already an App at …". Delete them first and let Homebrew reinstall them, or take them over afterwards with `brew install --cask --force <cask>`.
+> Apps you installed by hand that are also in the Brewfile make `brew bundle` fail with "It seems there is already an App at …". Delete them first and let Homebrew reinstall them, or take them over afterwards with `brew install --cask --force <cask>`.
 
 Bootstrap shows an interactive menu:
 
@@ -136,7 +136,7 @@ All from the [Brewfile](Brewfile):
 | **AI tools** | Claude, Codex, Copilot CLI, opencode, Antigravity |
 | **Kubernetes / cloud** | kubectl, kubectx, helm, k9s, stern, kubeseal, AWS CLI, gcloud, cloudflared |
 | **Media** | ffmpeg, ImageMagick, vips, exiftool |
-| **Apps** | Ghostty, iTerm2, VS Code, JetBrains Toolbox, Android Studio, Postgres.app, Chrome, Firefox, Discord, Spotify |
+| **Apps** | Ghostty, iTerm2, VS Code, Android Studio, Postgres.app, Chrome, Firefox, Discord, Spotify |
 | **Fonts** | JetBrains Mono, JetBrains Mono Nerd Font |
 
 ## 📁 Repo layout
