@@ -2,6 +2,7 @@
 set -euo pipefail
 
 DOTFILES="$(cd "$(dirname "$0")" && pwd)"
+BACKUP_DIR="$HOME/.dotfiles-backup/$(date +%Y%m%d-%H%M%S)"
 
 # Colors
 BOLD='\033[1m'
@@ -30,6 +31,9 @@ header() {
 }
 
 # ─── Tasks ────────────────────────────────────────────────
+#
+# run_task calls these inside an `if`, which switches off `set -e` for them,
+# so every step that can fail has to check for it explicitly.
 
 task_workspace() {
     info "Creating workspace directory"
@@ -37,37 +41,65 @@ task_workspace() {
     success "Workspace ready"
 }
 
+# Move a real file or directory out of the way, keeping it under ~/.dotfiles-backup
+backup() {
+    local target="$1"
+    [ -e "$target" ] && [ ! -L "$target" ] || return 0
+    mkdir -p "$BACKUP_DIR" && mv "$target" "$BACKUP_DIR/" || return 1
+    warn "Moved existing $target to $BACKUP_DIR/"
+}
+
 task_symlinks() {
     info "Creating symlinks"
-    mkdir -pv "${HOME}/.config"
-    mkdir -pv "${HOME}/.config/fish"
+    mkdir -pv "${HOME}/.config/fish" || return 1
+
+    # The shell config finds the repo through $DOTFILES, which defaults to here
+    if [ "$DOTFILES" != "$HOME/workspace/dotfiles" ]; then
+        warn "Repo is at $DOTFILES, not ~/workspace/dotfiles — the shells won't find bin/ or the dotfiles alias."
+        warn "Move it there, or link it: ln -s \"$DOTFILES\" ~/workspace/dotfiles"
+    fi
 
     local links=(
         "$DOTFILES/.vimrc:$HOME/.vimrc"
         "$DOTFILES/config/bash/.bash_profile:$HOME/.bash_profile"
         "$DOTFILES/config/zsh/.zshenv:$HOME/.zshenv"
-        "$DOTFILES/config/zsh/.zshrc:$HOME/.zshrc"
         "$DOTFILES/config/zsh/.zprofile:$HOME/.zprofile"
+        "$DOTFILES/config/zsh/.zshrc:$HOME/.zshrc"
+        "$DOTFILES/config/shell:$HOME/.config/shell"
         "$DOTFILES/config/fish/config.fish:$HOME/.config/fish/config.fish"
-        "$DOTFILES/config/fish/alias.fish:$HOME/.config/fish/alias.fish"
-        "$DOTFILES/config/fish/local.fish:$HOME/.config/fish/local.fish"
-        "$DOTFILES/config/fish/export.fish:$HOME/.config/fish/export.fish"
         "$DOTFILES/config/fish/completions:$HOME/.config/fish/completions"
         "$DOTFILES/config/fish/functions:$HOME/.config/fish/functions"
         "$DOTFILES/config/git:$HOME/.config/git"
         "$DOTFILES/config/starship.toml:$HOME/.config/starship.toml"
     )
 
+    local failed=0
     for entry in "${links[@]}"; do
         src="${entry%%:*}"
         dst="${entry##*:}"
-        if [ -e "$src" ]; then
-            ln -snvf "$src" "$dst"
-        else
+        if [ ! -e "$src" ]; then
             warn "Skipping $(basename "$src") — source not found"
+        elif ! backup "$dst"; then
+            fail "Couldn't move $dst out of the way — left it alone"
+            failed=1
+        elif ! ln -snvf "$src" "$dst"; then
+            failed=1
         fi
     done
 
+    # Links left behind by files since removed from the repo
+    for link in "$HOME"/.* "$HOME"/.config/* "$HOME"/.config/fish/*; do
+        if [ -L "$link" ] && [ ! -e "$link" ] && [[ "$(readlink "$link")" == "$DOTFILES"/* ]]; then
+            rm -v "$link"
+        fi
+    done
+
+    # ~/.gitconfig wins over ~/.config/git/config, so it would hide the repo's
+    if [ -f "$HOME/.gitconfig" ] && [ ! -L "$HOME/.gitconfig" ]; then
+        backup "$HOME/.gitconfig" || failed=1
+    fi
+
+    [ "$failed" -eq 0 ] || return 1
     success "Symlinks created"
 }
 
@@ -77,26 +109,35 @@ task_homebrew() {
         return
     fi
     info "Installing Homebrew packages (this may take a while)"
-    bash "$DOTFILES/brew-install.sh"
+    bash "$DOTFILES/brew-install.sh" || return 1
     success "Homebrew packages installed"
 }
 
 task_fish_default() {
     local fish_path
-    fish_path="$(which fish 2>/dev/null || true)"
+    fish_path="$(command -v fish || true)"
+    # Homebrew may have been installed earlier in this run, so not on PATH yet
+    if [ -z "$fish_path" ] && [ -x /opt/homebrew/bin/fish ]; then
+        fish_path=/opt/homebrew/bin/fish
+    fi
 
     if [ -z "$fish_path" ]; then
         fail "Fish shell not found — install it first (e.g. brew install fish)"
         return 1
     fi
 
-    if ! grep -qF "$fish_path" /etc/shells; then
+    if [ "$(dscl . -read "/Users/$USER" UserShell 2>/dev/null | awk '{print $2}')" = "$fish_path" ]; then
+        success "Fish is already the default shell"
+        return
+    fi
+
+    if ! grep -qxF "$fish_path" /etc/shells; then
         info "Adding $fish_path to /etc/shells (requires sudo)"
-        echo "$fish_path" | sudo tee -a /etc/shells >/dev/null
+        echo "$fish_path" | sudo tee -a /etc/shells >/dev/null || return 1
     fi
 
     info "Setting Fish as default shell"
-    chsh -s "$fish_path"
+    chsh -s "$fish_path" || return 1
     success "Default shell set to Fish"
 }
 

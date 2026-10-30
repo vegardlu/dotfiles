@@ -1,41 +1,7 @@
-# Docker / colima. Testcontainers does not read the active docker context, so it
-# needs DOCKER_HOST pointed at colima's socket; the override gives Ryuk the
-# in-VM socket path to bind-mount. Guarded so the dotfiles stay portable.
-if [[ -S "$HOME/.colima/default/docker.sock" ]]; then
-    export DOCKER_HOST="unix://$HOME/.colima/default/docker.sock"
-    export TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE="/var/run/docker.sock"
-fi
+# Read by every zsh, interactive or not: environment and PATH only.
 
-# Android SDK, managed by Android Studio. ANDROID_HOME is how Gradle locates the
-# SDK without a local.properties. Here rather than in .zprofile so that
-# non-interactive zsh — scripts, Gradle, agent tooling — finds adb too, the same
-# reason DOCKER_HOST sits in this file; fish gets it for free since config.fish
-# runs for every session. Appended so nothing shadows a Homebrew binary, each
-# directory tested because Studio installs them piecemeal, and re-entry guarded
-# because .zshenv runs again for every nested shell.
-if [ -d "$HOME/Library/Android/sdk" ]; then
-    export ANDROID_HOME="$HOME/Library/Android/sdk"
+# Turn off Apple Terminal's per-tab history sessions (~/.zsh_sessions), so
+# history behaves the same in Terminal, iTerm2 and Ghostty.
+export SHELL_SESSIONS_DISABLE=1
 
-    # cmdline-tools goes first, ahead of Homebrew. Any Homebrew-linked copy of
-    # these binaries (the android-commandlinetools cask) resolves to its own SDK
-    # root rather than this one, so sdkmanager/avdmanager silently operate on an
-    # empty SDK — it once swallowed a whole `sdkmanager --licenses` run. The copy
-    # inside the SDK resolves it correctly with no --sdk_root flag; keep it first
-    # so a reinstalled cask can never take over again.
-    _android_cli="$ANDROID_HOME/cmdline-tools/latest/bin"
-    case ":$PATH:" in
-        *":$_android_cli:"*) ;;
-        *) [ -d "$_android_cli" ] && export PATH="$_android_cli:$PATH" ;;
-    esac
-
-    # platform-tools and emulator go last — platform-tools ships its own sqlite3,
-    # which must not shadow /usr/bin/sqlite3.
-    for _android_dir in platform-tools emulator; do
-        _android_path="$ANDROID_HOME/$_android_dir"
-        case ":$PATH:" in
-            *":$_android_path:"*) ;;
-            *) [ -d "$_android_path" ] && export PATH="$PATH:$_android_path" ;;
-        esac
-    done
-    unset _android_cli _android_dir _android_path
-fi
+[[ -r ~/.config/shell/env.sh ]] && source ~/.config/shell/env.sh

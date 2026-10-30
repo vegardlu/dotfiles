@@ -1,30 +1,11 @@
-# Bash Profile
+# Bash isn't the daily shell, but give it the same environment, PATH and
+# aliases so it behaves when something drops into it.
 
-if [ -f $(brew --prefix)/etc/bash_completion ]; then
-    . $(brew --prefix)/etc/bash_completion
+export BASH_SILENCE_DEPRECATION_WARNING=1   # macOS "default shell is now zsh" nag
+
+if [ -r ~/.config/shell/env.sh ]; then
+    . ~/.config/shell/env.sh
 fi
-
-if [ -f "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh" ]; then
-    __GIT_PROMPT_DIR=$(brew --prefix)/opt/bash-git-prompt/share
-   source "$(brew --prefix)/opt/bash-git-prompt/share/gitprompt.sh"
+if [ -r ~/.config/shell/aliases ]; then
+    . ~/.config/shell/aliases
 fi
-
-# Source
-source ~/.compiled-exports
-source ~/.exports
-source ~/.functions
-source ~/.aliases
-
-# Case-insensitive globbing (used in pathname expansion)
-shopt -s nocaseglob;
-
-# Append to the Bash history file, rather than overwriting it
-shopt -s histappend;
-
-# Autocorrect typos in path names when using `cd`
-shopt -s cdspell;
-
-# Add tab completion for SSH hostnames based on ~/.ssh/config, ignoring wildcards
-[ -e "$HOME/.ssh/config" ] && complete -o "default" -o "nospace" -W "$(grep "^Host" ~/.ssh/config | grep -v "[?*]" | cut -d " " -f2- | tr ' ' '\n')" scp sftp ssh;
-
-export PATH="$HOME/.cargo/bin:$PATH"

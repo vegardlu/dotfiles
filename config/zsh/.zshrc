@@ -1,46 +1,75 @@
-# ─── Completion system ─────────────────────────────────────
-# Only rebuild completion dump once per day; otherwise reuse cache
+# Interactive zsh only. Environment and PATH live in ~/.zshenv.
+
+# ─── Options ──────────────────────────────────────────────
+HISTSIZE=50000
+SAVEHIST=50000
+setopt share_history hist_ignore_all_dups hist_ignore_space
+setopt interactive_comments
+
+# Emacs keys. zsh would pick vi mode on its own because EDITOR is vim, and
+# /etc/zshrc has already bound Delete/Home/End into that vi keymap, so bind
+# them again here.
+bindkey -e
+bindkey '^[[3~' delete-char
+bindkey '^[[H' beginning-of-line '^[OH' beginning-of-line
+bindkey '^[[F' end-of-line '^[OF' end-of-line
+
+# Up/down search history for what's already typed, like fish.
+autoload -Uz up-line-or-beginning-search down-line-or-beginning-search
+zle -N up-line-or-beginning-search
+zle -N down-line-or-beginning-search
+bindkey '^[[A' up-line-or-beginning-search '^[OA' up-line-or-beginning-search
+bindkey '^[[B' down-line-or-beginning-search '^[OB' down-line-or-beginning-search
+
+# ─── Completion ───────────────────────────────────────────
+# Homebrew's completions (brew, gh, kubectl, …). Apple's /bin/zsh doesn't look
+# there by default.
+[[ -n $HOMEBREW_PREFIX ]] && fpath=($HOMEBREW_PREFIX/share/zsh/site-functions $fpath)
+
+# Rebuild the dump once a day and trust it in between, skipping compinit's
+# slow security check. Deleting it first matters: compinit leaves an unchanged
+# dump untouched, so its age would never reset. After installing new
+# completions, `rm ~/.zcompdump` to pick them up right away.
 autoload -Uz compinit
-if [[ -f ~/.zcompdump && $(date +'%j') == $(stat -f '%Sm' -t '%j' ~/.zcompdump 2>/dev/null) ]]; then
-    compinit -C
+_zcompdump=~/.zcompdump
+_fresh=(${~_zcompdump}(N.mh-24))
+if (( $#_fresh )); then
+    compinit -C -d $_zcompdump
 else
-    compinit
+    rm -f $_zcompdump
+    compinit -d $_zcompdump
 fi
+unset _zcompdump _fresh
 
-# ─── kubectl completions (cached) ─────────────────────────
-# Regenerate cache if missing or older than 7 days
-if command -v kubectl &>/dev/null; then
-    local _kubectl_comp=~/.zsh_kubectl_completion
-    if [[ ! -f "$_kubectl_comp" || $(find "$_kubectl_comp" -mtime +7 2>/dev/null) ]]; then
-        kubectl completion zsh > "$_kubectl_comp" 2>/dev/null
+zstyle ':completion:*' menu select
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
+
+# ─── Aliases and functions ────────────────────────────────
+source ~/.config/shell/aliases
+
+# jdk 21: point JAVA_HOME at that JDK for this shell. No argument lists JDKs.
+jdk() {
+    if (( $# == 0 )); then
+        /usr/libexec/java_home -V
+        return
     fi
-    [[ -f "$_kubectl_comp" ]] && source "$_kubectl_comp"
+    local home
+    home=$(/usr/libexec/java_home -F -v "$1") || return
+    export JAVA_HOME=$home
+    java -version
+}
+
+# ─── Tools ────────────────────────────────────────────────
+(( $+commands[starship] )) && eval "$(starship init zsh)"
+(( $+commands[zoxide] )) && eval "$(zoxide init zsh)"
+
+# Machine-local additions, not in the repo.
+if [[ -r ~/.zshrc.local ]]; then
+    source ~/.zshrc.local
 fi
 
-# ─── Environment ──────────────────────────────────────────
-export LANG=en_US.UTF-8
-
-# ─── thefuck (inlined to avoid spawning Python on every startup) ──
-# Re-run: thefuck --alias  (from zsh) to update if thefuck changes
-if command -v thefuck &>/dev/null; then
-    fuck () {
-        TF_PYTHONIOENCODING=$PYTHONIOENCODING
-        export TF_SHELL=zsh
-        export TF_ALIAS=fuck
-        TF_SHELL_ALIASES=$(alias)
-        export TF_SHELL_ALIASES
-        TF_HISTORY="$(fc -ln -10)"
-        export TF_HISTORY
-        export PYTHONIOENCODING=utf-8
-        TF_CMD=$(thefuck THEFUCK_ARGUMENT_PLACEHOLDER "$@") && eval "$TF_CMD"
-        unset TF_HISTORY
-        export PYTHONIOENCODING=$TF_PYTHONIOENCODING
-        test -n "$TF_CMD" && print -s "$TF_CMD"
-    }
+# Must come last: it wraps the widgets defined above. (An `if`, not `&&`, so a
+# missing file doesn't leave the first prompt showing a failed status.)
+if [[ -r $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]]; then
+    source $HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 fi
-
-# ─── Prompt (Starship) ────────────────────────────────────
-eval "$(starship init zsh)"
-
-# ─── zoxide (z replacement, directory jumping) ────────────
-command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"

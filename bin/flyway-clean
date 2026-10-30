@@ -6,10 +6,10 @@ if ! command -v flyway >/dev/null 2>&1; then
   exit 1
 fi
 
-if [ -z "$DATABASE_JDBC_URL" ] || [ -z "$DATABASE_USERNAME" ]; then
-  echo "Error: DATABASE_JDBC_URL and DATABASE_USERNAME must be set." >&2
-  exit 1
-fi
+# Defaults to the local Postgres.app database, which is named after the user.
+# Point it elsewhere by setting DATABASE_JDBC_URL / DATABASE_USERNAME.
+DATABASE_JDBC_URL="${DATABASE_JDBC_URL:-jdbc:postgresql://localhost:5432/$USER}"
+DATABASE_USERNAME="${DATABASE_USERNAME:-$USER}"
 
 echo "Database: $DATABASE_JDBC_URL (user: $DATABASE_USERNAME)"
 printf "Are you sure you want to clean this database? [y/N] "

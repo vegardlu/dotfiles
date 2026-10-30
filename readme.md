@@ -1,27 +1,41 @@
 # 🏠 Vegard's dotfiles
 
-Nice! You want to give these dotfiles a try! You may want to first fork this repository, review the code, and remove things you don't want or need. Don't blindly use my settings unless you know what that entails. Your mileage may vary. 🚀
+My macOS setup for hobby development. One command takes a fresh Mac to a working machine with my shells, tools and apps.
+
+![macOS](https://img.shields.io/badge/macOS-Apple%20Silicon-black?logo=apple)
+![fish](https://img.shields.io/badge/shell-fish-4AAE47)
+![zsh](https://img.shields.io/badge/shell-zsh-F15A24)
+![Homebrew](https://img.shields.io/badge/packages-Homebrew-FBB040?logo=homebrew&logoColor=white)
+
+> [!NOTE]
+> These are my personal settings. Fork the repo, read through it and remove what you don't need before running it yourself.
 
 ![](https://user-images.githubusercontent.com/2592489/95008199-0357ce80-0618-11eb-8d50-06513082baf0.gif)
 
-## What's inside
+## ✨ Highlights
 
-- **Fish shell** as the primary shell, with [Starship](https://starship.rs) prompt, custom aliases, and completions
-- **Homebrew** package management with a curated [Brewfile](Brewfile) — dev tools, Kubernetes/cloud CLIs, casks, fonts, and multiple Java (Temurin) versions
-- **CLI commands** in `bin/` — handy scripts available system-wide
-- Config for **Bash**, **Zsh**, **Vim**, **Git**, and **Starship** (all symlinked into place)
+- 🐟 **Fish and zsh with the same setup.** Both shells get the same PATH, environment and aliases. Fish is the default shell.
+- ⚡ **Fast startup.** The environment files start no subprocesses, and prompts and completions load only in interactive shells.
+- 🖥️ **Works in any terminal.** Ghostty, iTerm2 and Terminal.app all behave the same, and so do non-interactive shells such as scripts, IDEs and agents.
+- 🍺 **A single Brewfile** for CLI tools, languages, Kubernetes and cloud CLIs, apps and fonts.
+- 🔁 **Safe to re-run.** Bootstrap backs files up instead of overwriting them, and cleans up links it left behind earlier.
 
-## Installation
+## 🚀 Quick start
 
-Clone this repo to `~/workspace/dotfiles` and run the bootstrap:
+On a fresh Mac, clone over HTTPS (no SSH key needed yet) and run the bootstrap:
 
 ```sh
-git clone git@github.com:vegardlu/dotfiles.git ~/workspace/dotfiles
-cd ~/workspace/dotfiles
-bash bootstrap.sh
+git clone https://github.com/vegardlu/dotfiles.git ~/workspace/dotfiles
+bash ~/workspace/dotfiles/bootstrap.sh
 ```
 
-The bootstrap presents an interactive menu — pick what you need:
+> [!TIP]
+> The first `git` command on a fresh Mac asks to install the Xcode Command Line Tools. Accept the prompt, then run the clone again.
+
+> [!IMPORTANT]
+> Apps you installed by hand that are also in the Brewfile (JetBrains Toolbox, say) make `brew bundle` fail with "It seems there is already an App at …". Delete them first and let Homebrew reinstall them, or take them over afterwards with `brew install --cask --force <cask>`.
+
+Bootstrap shows an interactive menu:
 
 ```
 ┌──────────────────────────────────────┐
@@ -39,71 +53,130 @@ The bootstrap presents an interactive menu — pick what you need:
     0)  Exit
 ```
 
-Running all tasks will create `~/workspace`, symlink config files, install everything in the Brewfile, and set Fish as your default shell.
-
-## The `dotfiles` command
-
-After setup, you can re-run the bootstrap anytime by simply typing:
-
-```sh
-dotfiles
-```
-
-This is a Fish alias that runs `bash ~/workspace/dotfiles/bootstrap.sh`. Use it whenever you pull new changes or want to re-link config files and install new packages.
-
-## CLI commands
-
-Scripts in `bin/` are added to your `$PATH` automatically. They're available as regular commands from any directory.
-
-| Command | Description |
+| Task | What it does |
 |---|---|
-| `nais-postgres-proxy` | Interactive wrapper around `nais postgres proxy` — prompts for team, port, reason, and database name with sensible defaults. Supports auto-discovery of databases via kubectl and non-interactive flag mode. Run `nais-postgres-proxy --help` for details. |
-| `cloudutil` | Jasypt encryption utility for Spring Boot secrets |
-| `flyway-clean` | Safe Flyway database clean with confirmation prompt |
+| **Create workspace directory** | Creates `~/workspace` |
+| **Create symlinks** | Symlinks the configs into `~` and `~/.config`. Files already there are moved to `~/.dotfiles-backup/<timestamp>/`, never deleted |
+| **Install Homebrew packages** | Installs Homebrew if it's missing, then everything in the [Brewfile](Brewfile) |
+| **Set Fish as default shell** | Adds Homebrew's fish to `/etc/shells` and `chsh`es to it |
 
-## Shell aliases
+Once setup is done, typing **`dotfiles`** in any shell re-runs the bootstrap. Do that after pulling changes or adding packages.
 
-Defined in [`config/fish/alias.fish`](config/fish/alias.fish):
+### ✅ After the first run
 
-| Alias | What it does |
+1. **Open a new terminal** so the new shell and environment take effect.
+2. **Pick the Nerd Font** in iTerm2 and Terminal.app: choose *JetBrainsMono Nerd Font* so `eza` icons and the Starship prompt render. Ghostty needs nothing.
+3. **Sign in to GitHub:** `gh auth login`. Say yes when it offers to set up git credentials, so pushing over HTTPS works. It adds a credential helper to [`config/git/config`](config/git/config), which is worth committing.
+4. **Docker:** start the VM with `colima-start`. `docker compose` and `docker buildx` are already wired up, because the Homebrew task points `~/.docker/config.json` at Homebrew's plugin directory.
+
+## 🐚 Shells
+
+| Shell | Environment and PATH | Interactive setup |
+|---|---|---|
+| **fish** | top of [`config/fish/config.fish`](config/fish/config.fish) | rest of `config.fish` |
+| **zsh** | [`config/shell/env.sh`](config/shell/env.sh), from `.zshenv` and `.zprofile` | [`config/zsh/.zshrc`](config/zsh/.zshrc) |
+| **bash** | [`config/shell/env.sh`](config/shell/env.sh), from `.bash_profile` | aliases, in login shells only |
+
+`env.sh` and the top of `config.fish` mirror each other, so a change to one also needs making in the other.
+
+### PATH
+
+Every shell ends up with the same order:
+
+1. `~/.local/bin` (Claude Code, pipx)
+2. `~/workspace/dotfiles/bin`
+3. Homebrew: `/opt/homebrew/bin`, `/opt/homebrew/sbin`
+4. System directories
+5. `~/go/bin`, JetBrains Toolbox scripts, Postgres.app's `psql` and friends, Android SDK tools
+
+Directories that don't exist are skipped. Only login shells (new terminal tabs) move entries to the front. Nested shells and scripts only add what's missing, so an activated venv or `nvm use` stays in front. Zsh reads `env.sh` twice on purpose: macOS's `/etc/zprofile` runs `path_helper` after `.zshenv`, which moves `/usr/bin` back in front of Homebrew, so `.zprofile` puts the order right again.
+
+### Environment
+
+| Variable | Value |
+|---|---|
+| `JAVA_HOME` | Temurin 25 (switch with `jdk <version>`) |
+| `ANDROID_HOME` | `~/Library/Android/sdk`, when Android Studio has installed it |
+| `DOCKER_HOST`, `TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE` | Colima's socket, once Colima has been set up (for Testcontainers) |
+| `DOTFILES`, `WORKSPACE` | `~/workspace/dotfiles`, `~/workspace` |
+| `EDITOR`, `LANG` | `vim`, `en_US.UTF-8`, unless already set |
+
+### Zsh extras
+
+Zsh gets a few touches to feel closer to fish: prefix history search on ↑/↓, case-insensitive menu completion, syntax highlighting, shared history across tabs, and Homebrew's completions (brew, gh, kubectl, …).
+
+## ⌨️ Aliases, functions and commands
+
+Available in fish and zsh. The aliases (`e`, `dotfiles`) live in [`config/shell/aliases`](config/shell/aliases), which bash reads too.
+
+| Command | What it does |
 |---|---|
 | `e` | Pretty file listing (`eza` with icons and git status) |
-| `dotfiles` | Re-run the bootstrap script |
-| `mvnit` | `mvn clean install` with integration tests |
-| `mvnp` | `mvn clean install` with packaging |
-| `mvnitp` | `mvn clean install` with packaging + integration tests |
-| `java11` / `java17` / `java21` / `java25` | Switch active Java version |
-| `dcd` | Shortcut for docker compose with a shared dev compose file |
+| `dotfiles` | Re-run the bootstrap |
+| `jdk <version>` | Point `JAVA_HOME` at another installed JDK for this shell; `jdk` alone lists them |
+| `z <dir>` | Jump to a frequently used directory ([zoxide](https://github.com/ajeetdsouza/zoxide)) |
 
-## Repo structure
+Scripts in [`bin/`](bin) are on PATH everywhere:
+
+| Script | What it does |
+|---|---|
+| `colima-start` | Start Colima with Apple Silicon defaults (`vz`, `virtiofs`; override with `COLIMA_CPU` / `COLIMA_MEMORY`) |
+| `flyway-clean` | Flyway clean of the local Postgres.app database, behind a confirmation prompt (override with `DATABASE_JDBC_URL` / `DATABASE_USERNAME`) |
+
+## 🍺 What gets installed
+
+All from the [Brewfile](Brewfile):
+
+| Group | Highlights |
+|---|---|
+| **Core** | git, gh, vim, jq, yq, fzf, ripgrep, fd, bat, eza |
+| **Shell** | fish, starship, zoxide, zsh-syntax-highlighting |
+| **Languages** | Node, Python, Go, Kotlin, Ruby, Lua, Java (Temurin) |
+| **Development** | Maven, Gradle, mvnd, Flyway, GoReleaser, golangci-lint, ShellCheck, Colima + Docker |
+| **AI tools** | Claude, Codex, Copilot CLI, opencode, Antigravity |
+| **Kubernetes / cloud** | kubectl, kubectx, helm, k9s, stern, kubeseal, AWS CLI, gcloud, cloudflared |
+| **Media** | ffmpeg, ImageMagick, vips, exiftool |
+| **Apps** | Ghostty, iTerm2, VS Code, JetBrains Toolbox, Android Studio, Postgres.app, Chrome, Firefox, Discord, Spotify |
+| **Fonts** | JetBrains Mono, JetBrains Mono Nerd Font |
+
+## 📁 Repo layout
 
 ```
 dotfiles/
-├── bootstrap.sh              # Entry point — interactive setup menu
-├── brew-install.sh            # Installs Homebrew + runs brew bundle
-├── Brewfile                   # All Homebrew packages, casks, and fonts
-├── .vimrc                     # Vim config
-├── bin/                       # CLI commands (added to $PATH)
-│   ├── nais-postgres-proxy
-│   ├── cloudutil
-│   └── flyway-clean
+├── bootstrap.sh            # Interactive setup menu
+├── brew-install.sh         # Installs Homebrew, runs brew bundle
+├── Brewfile                # Everything Homebrew installs
+├── .vimrc
+├── bin/                    # Scripts, on PATH
 └── config/
+    ├── shell/              # → ~/.config/shell, shared by all shells
+    │   ├── env.sh          #   environment and PATH (zsh, bash)
+    │   └── aliases         #   aliases (fish, zsh, bash)
     ├── fish/
-    │   ├── config.fish        # Main Fish config (sources the files below)
-    │   ├── alias.fish         # Shell aliases
-    │   ├── export.fish        # Exported env vars (Java homes, workspace)
-    │   ├── local.fish         # Machine-local env vars (not committed)
-    │   ├── completions/       # Fish completions for CLI commands
-    │   └── functions/         # Fish functions (e.g. `cop`, Copilot CLI with pre-approved tools)
-    ├── git/                   # Git user config and global ignore (~/.config/git)
+    │   ├── config.fish     # environment, PATH and interactive setup
+    │   ├── completions/    # completions for bin/ scripts
+    │   └── functions/      # autoloaded functions (jdk)
+    ├── zsh/                # .zshenv, .zprofile, .zshrc
     ├── bash/.bash_profile
-    ├── zsh/.zshenv, .zshrc
-    └── starship.toml          # Starship prompt config
+    ├── git/                # → ~/.config/git: config and global ignore
+    └── starship.toml       # prompt
 ```
 
-## Adding your own stuff
+## 🛠️ Making it yours
 
-- **New CLI command** → add an executable script to `bin/`, optionally with Fish completions in `config/fish/completions/`
-- **New Homebrew package** → add to the matching section in `Brewfile`, then run `dotfiles` and pick "Install Homebrew packages"
-- **New alias** → add to `config/fish/alias.fish`
-- **Machine-specific env vars** → add to `config/fish/local.fish`
+| To add… | Edit |
+|---|---|
+| A Homebrew package | [`Brewfile`](Brewfile), then `dotfiles` → *Install Homebrew packages* |
+| An alias | [`config/shell/aliases`](config/shell/aliases). Keep the `alias name='command'` form so all three shells can read it |
+| An env var or PATH entry | [`config/shell/env.sh`](config/shell/env.sh) **and** the top of [`config/fish/config.fish`](config/fish/config.fish) |
+| A script | an executable in `bin/`, optionally with completions in `config/fish/completions/` |
+| A fish function | `config/fish/functions/<name>.fish`. It autoloads on first use, so it costs nothing at startup |
+| Machine-only interactive settings | `~/.config/fish/local.fish` or `~/.zshrc.local`. They're read if present and kept out of the repo, but only by interactive shells, so put environment that scripts and IDEs need in `env.sh` |
+
+## 🩺 Troubleshooting
+
+- **A command resolves to the wrong binary.** Check `type -a <cmd>` (fish) or `whence -a <cmd>` (zsh) against the [PATH order](#path) above.
+- **New zsh completions don't show up.** Zsh rebuilds its completion cache once a day. Run `rm ~/.zcompdump` and open a new tab.
+- **Zsh warns about "insecure directories".** Some of Homebrew's directories are group-writable. Run `compaudit | xargs chmod g-w`.
+- **Something disappeared after bootstrap.** Look in `~/.dotfiles-backup/`. That includes any old `~/.gitconfig`, which would otherwise override [`config/git/config`](config/git/config).
+- **`git status` in this repo shows changes you didn't make.** The configs are symlinks into the repo, so whatever writes to them edits the repo. That covers installers appending to `~/.zprofile` or `config.fish`, `git config --global` and `gh auth` writing to `config/git/config`, and fish's `funcsave` writing to `config/fish/functions/`. Commit what's worth keeping (gh's credential helper is), move PATH lines into `env.sh` / `config.fish`, and discard the rest.

@@ -1,0 +1,5 @@
+# Aliases shared by zsh, bash and fish. Fish understands `alias name='…'` too,
+# so keep every line to that form and all three shells can source this file.
+
+alias e='eza --icons --git -laTL 1'
+alias dotfiles='bash "$DOTFILES/bootstrap.sh"'

@@ -1,13 +1,4 @@
-target
-.classpath
-.project
-.settings
-.vagrant
-.idea
-*.iml
-*.bat
-*.versionsBackup
-*.log
 .DS_Store
+.idea/
 *.swp
 Brewfile.lock.json
