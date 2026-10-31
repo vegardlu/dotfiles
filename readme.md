@@ -68,6 +68,7 @@ Once setup is done, typing **`dotfiles`** in any shell re-runs the bootstrap. Do
 2. **Pick the Nerd Font** in iTerm2 and Terminal.app: choose *JetBrainsMono Nerd Font* so `eza` icons and the Starship prompt render. Ghostty needs nothing.
 3. **Sign in to GitHub:** `gh auth login`. Say yes when it offers to set up git credentials, so pushing over HTTPS works. It adds a credential helper to [`config/git/config`](config/git/config), which is worth committing.
 4. **Docker:** start the VM with `colima-start`. `docker compose` and `docker buildx` are already wired up, because the Homebrew task points `~/.docker/config.json` at Homebrew's plugin directory.
+5. **Xcode** (not in the Brewfile): install it from the App Store, open it once, then point the command-line tools at it with `sudo xcode-select -s /Applications/Xcode.app/Contents/Developer`. Until then `xcodebuild` fails with "requires Xcode, but active developer directory … is a command line tools instance". Sign in to your Apple ID under *Settings → Accounts* so automatic signing works.
 
 ## 🐚 Shells
 
