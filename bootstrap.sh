@@ -94,6 +94,9 @@ task_symlinks() {
         fi
     done
 
+    # Silences login's "Last login: …" line; fish_greeting says hello instead
+    [ -e "$HOME/.hushlogin" ] || touch "$HOME/.hushlogin" || failed=1
+
     # ~/.gitconfig wins over ~/.config/git/config, so it would hide the repo's
     if [ -f "$HOME/.gitconfig" ] && [ ! -L "$HOME/.gitconfig" ]; then
         backup "$HOME/.gitconfig" || failed=1

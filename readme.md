@@ -158,7 +158,7 @@ dotfiles/
     ├── fish/
     │   ├── config.fish     # environment, PATH and interactive setup
     │   ├── completions/    # completions for bin/ scripts
-    │   └── functions/      # autoloaded functions (jdk)
+    │   └── functions/      # autoloaded functions (jdk, fish_greeting)
     ├── zsh/                # .zshenv, .zprofile, .zshrc
     ├── bash/.bash_profile
     ├── git/                # → ~/.config/git: config and global ignore
