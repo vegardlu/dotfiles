@@ -69,6 +69,7 @@ Once setup is done, typing **`dotfiles`** in any shell re-runs the bootstrap. Do
 3. **Sign in to GitHub:** `gh auth login`. Say yes when it offers to set up git credentials, so pushing over HTTPS works. It adds a credential helper to [`config/git/config`](config/git/config), which is worth committing.
 4. **Docker:** start the VM with `colima-start`. `docker compose` and `docker buildx` are already wired up, because the Homebrew task points `~/.docker/config.json` at Homebrew's plugin directory.
 5. **Xcode** (not in the Brewfile): install it from the App Store, open it once, then point the command-line tools at it with `sudo xcode-select -s /Applications/Xcode.app/Contents/Developer`. Until then `xcodebuild` fails with "requires Xcode, but active developer directory … is a command line tools instance". Sign in to your Apple ID under *Settings → Accounts* so automatic signing works.
+6. **Android:** run `android-sdk`. It installs Google's command-line tools, platform-tools and the emulator into `~/Library/Android/sdk`, Android Studio's own location, so a new terminal then has `ANDROID_HOME` and the tools. Projects add their platforms and emulators on top. The new `android` CLI asks for no licence step; on Android Studio's first launch, point it at that SDK rather than letting it download a second one.
 
 ## 🐚 Shells
 
@@ -97,7 +98,7 @@ Directories that don't exist are skipped. Only login shells (new terminal tabs) 
 | Variable | Value |
 |---|---|
 | `JAVA_HOME` | Temurin 25 (switch with `jdk <version>`) |
-| `ANDROID_HOME` | `~/Library/Android/sdk`, when Android Studio has installed it |
+| `ANDROID_HOME` | `~/Library/Android/sdk`, once `android-sdk` has installed it |
 | `DOCKER_HOST`, `TESTCONTAINERS_DOCKER_SOCKET_OVERRIDE` | Colima's socket, once Colima has been set up (for Testcontainers) |
 | `DOTFILES`, `WORKSPACE` | `~/workspace/dotfiles`, `~/workspace` |
 | `EDITOR`, `LANG` | `vim`, `en_US.UTF-8`, unless already set |
@@ -121,6 +122,7 @@ Scripts in [`bin/`](bin) are on PATH everywhere:
 
 | Script | What it does |
 |---|---|
+| `android-sdk` | Install the Android SDK's command-line tools, platform-tools and emulator into `~/Library/Android/sdk`, checksum-verified; any packages passed go in too |
 | `colima-start` | Start Colima with Apple Silicon defaults (`vz`, `virtiofs`; override with `COLIMA_CPU` / `COLIMA_MEMORY`) |
 | `flyway-clean` | Flyway clean of the local Postgres.app database, behind a confirmation prompt (override with `DATABASE_JDBC_URL` / `DATABASE_USERNAME`) |
 

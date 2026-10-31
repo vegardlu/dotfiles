@@ -1,0 +1,36 @@
+#!/bin/sh
+# Bootstraps the Android SDK in Android Studio's own location, so Studio and the
+# command line share one SDK root: Google's command-line tools, checksum-verified,
+# then platform-tools, the emulator and whatever packages are passed.
+#   android-sdk                                  # tools only
+#   android-sdk platforms/android-37.0 build-tools/37.0.0
+set -e
+
+SDK="${ANDROID_HOME:-$HOME/Library/Android/sdk}"
+TOOLS="$SDK/cmdline-tools/latest/bin"
+REPO=https://dl.google.com/android/repository
+
+if [ ! -x "$TOOLS/android" ]; then
+  arch=$(uname -m); [ "$arch" = arm64 ] || arch=x86_64
+  tmp=$(mktemp -d); trap 'rm -rf "$tmp"' EXIT
+  curl -fsSL "$REPO/repository2-3.xml" -o "$tmp/repo.xml"
+  found=$(python3 -I - "$tmp/repo.xml" "commandlinetools-mac_$arch" <<'EOF'
+import sys, xml.etree.ElementTree as ET
+for p in ET.parse(sys.argv[1]).getroot().iter("remotePackage"):
+    if p.get("path") == "cmdline-tools;latest":
+        for c in p.iter("complete"):
+            if c.findtext("url").startswith(sys.argv[2]):
+                print(c.findtext("url"), c.findtext("checksum"))
+EOF
+  )
+  zip=${found% *} sha=${found#* }
+  [ -n "$found" ] || { echo "Error: no cmdline-tools for mac_$arch in $REPO" >&2; exit 1; }
+  echo "Installing $zip into $SDK"
+  curl -fsSL "$REPO/$zip" -o "$tmp/tools.zip"
+  echo "$sha  $tmp/tools.zip" | shasum -a 1 -c - >/dev/null
+  unzip -q "$tmp/tools.zip" -d "$tmp"
+  mkdir -p "$SDK/cmdline-tools"
+  mv "$tmp/cmdline-tools" "$SDK/cmdline-tools/latest"
+fi
+
+"$TOOLS/android" sdk install platform-tools emulator "$@" </dev/null

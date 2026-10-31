@@ -28,7 +28,7 @@ else
 end
 fish_add_path --path --append $HOME/go/bin "$HOME/Library/Application Support/JetBrains/Toolbox/scripts" /Applications/Postgres.app/Contents/Versions/latest/bin
 
-# Android SDK, managed by Android Studio. Gradle finds the SDK through
+# Android SDK, in Android Studio's location (android-sdk installs it). Gradle finds it through
 # ANDROID_HOME, so projects build without a local.properties. Appended, because
 # platform-tools ships its own sqlite3, which must not shadow /usr/bin/sqlite3.
 if test -d $HOME/Library/Android/sdk
